@@ -174,6 +174,28 @@ export default {
     sidebarTextTheme: 'Sidebar Text Theme'
   },
   messages: {
+    successCreate: 'Successfully created',
     successUpdate: 'Successfully updated'
+  },
+  lessons: {
+    yesterday: 'Yesterday',
+    today: 'Today',
+    tomorrow: 'Tomorrow',
+    title: 'Lesson detail',
+    name: 'Name',
+    type: 'SKI/SNB',
+    ski: 'SKI',
+    snb: 'SNB',
+    price: 'Price',
+    submitting: 'Submitting ...',
+    submit: 'Submit',
+    startTime: 'Start time',
+    endTime: 'End time',
+    search: 'Enter name',
+    instructor: 'Instructor',
+    client: 'Client',
+    email: 'Email',
+    phone: 'Phone',
+    phone2: 'Phone 2',
   }
 }

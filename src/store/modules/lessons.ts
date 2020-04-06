@@ -1,7 +1,7 @@
 import {Action, getModule, Module, Mutation, VuexModule} from 'vuex-module-decorators'
 
 import store from '@/store'
-import {getLessons, updateLesson} from "@/api/lessons";
+import {createLesson, getLessons, updateLesson} from "@/api/lessons";
 import {ILesson} from "@/api/types";
 
 export interface ILessonsState {
@@ -30,6 +30,29 @@ class Lessons extends VuexModule implements ILessonsState {
         console.log('UPDATING LESSON', payload)
         const lesson = { lesson: payload }
         const data: any = await updateLesson(payload.id, lesson)
+        const result: ILesson = data.lesson
+        return result
+    }
+
+    @Action({rawError: true})
+    public async CreateLesson(payload: {
+        from: string,
+        to: string,
+        price: number,
+        name: string,
+        type: string,
+        client: {
+            id?: number,
+            name?: string,
+            email?: string,
+            phone?: string,
+            phone_2?: string,
+        }
+        instructor_id: number
+    }) {
+        console.log('UPDATING LESSON', payload)
+        const lesson = { lesson: payload }
+        const data: any = await createLesson(lesson)
         const result: ILesson = data.lesson
         return result
     }

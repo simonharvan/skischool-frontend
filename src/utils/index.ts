@@ -49,13 +49,39 @@ export const formatJson = (filterKeys: any, jsonData: any) =>
         }
     }))
 
-export const formatDateToBackend = (date: Date) => {
+export const formatDateTimeToBackendWithOffset = (date: Date) => {
     date.setHours(date.getHours() + 2)
+    return formatDateTimeToBackend(date)
+}
+
+export const formatDateTimeToBackend = (date: Date) => {
     return date.toISOString()
         .replace('T', ' ')
         .replace('Z', '')
         .substr(0, 19)
 }
+
+export const formatDateToBackend = (date: Date) => {
+    return date.toISOString().substr(0, 10)
+}
+
+export const formatTimeToBackend = (date: Date) => {
+    return date.toTimeString().substring(0,5)
+}
+
+
+
+export const generateId = (length: number, prefix: string = '') => {
+    var result = prefix + '_'
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    var charactersLength = characters.length
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+
+    return result
+}
+
 
 
 // Check if an element has a class

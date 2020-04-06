@@ -36,7 +36,7 @@ export const plugins = [
         }
     }),
     Selection({
-        items: true,
+        items: false,
         rows: false,
         grid: true, // select only grid cells
         horizontal: true,
@@ -68,7 +68,7 @@ export const plugins = [
             return currentlySelecting;
         },
         selected(data: any, type: string) {
-            console.log(data, type);
+            console.log('SELECTED', data, type);
         },
     })
 ]

@@ -68,6 +68,6 @@ export interface ILesson {
   name: string
   type: string
   price: number
-  instructor: IInstructor
-  client: IClient
+  instructor?: IInstructor
+  client?: IClient
 }

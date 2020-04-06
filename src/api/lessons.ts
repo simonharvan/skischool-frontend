@@ -7,6 +7,13 @@ export const getLessons = (params: any) =>
     params
   })
 
+export const createLesson = (data: any) =>
+    request({
+        url: '/lessons',
+        method: 'post',
+        data
+    })
+
 export const updateLesson = (id: number, data: any) =>
     request({
         url: `/lessons/${id}`,
