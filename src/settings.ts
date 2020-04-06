@@ -12,11 +12,11 @@ interface ISettings {
 
 // You can customize below settings :)
 const settings: ISettings = {
-  title: 'Vue Typescript Admin',
-  showSettings: true,
+  title: 'Ski school',
+  showSettings: false,
   showTagsView: true,
   fixedHeader: false,
-  showSidebarLogo: false,
+  showSidebarLogo: true,
   errorLog: ['production'],
   sidebarTextTheme: true,
   devServerPort: 9527,

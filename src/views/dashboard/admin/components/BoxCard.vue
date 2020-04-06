@@ -11,7 +11,7 @@
     </div>
     <div style="position:relative;">
       <pan-thumb
-        :image="avatar"
+        :image="require('@/assets/images/user.png')"
         class="panThumb"
       />
       <mallki
@@ -60,10 +60,6 @@ import Mallki from '@/components/TextHoverEffect/Mallki.vue'
 export default class extends Vue {
   get name() {
     return UserModule.name
-  }
-
-  get avatar() {
-    return UserModule.avatar
   }
 
   get roles() {

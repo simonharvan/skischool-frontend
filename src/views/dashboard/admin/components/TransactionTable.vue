@@ -64,8 +64,8 @@ export default class extends Vue {
   }
 
   private async fetchData() {
-    const { data } = await getTransactions({ /* Your params here */ })
-    this.list = data.items.slice(0, 8)
+    // const { data } = await getTransactions({ /* Your params here */ })
+    // this.list = data.items.slice(0, 8)
   }
 }
 </script>

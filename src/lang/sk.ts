@@ -1,7 +1,7 @@
 export default {
   route: {
     dashboard: 'Dashboard',
-    lessons: 'Lessons',
+    lessons: 'Lekcie',
     documentation: 'Documentation',
     guide: 'Guide',
     permission: 'Permission',
@@ -172,8 +172,5 @@ export default {
     showSidebarLogo: 'Sidebar Logo',
     fixedHeader: 'Fixed Header',
     sidebarTextTheme: 'Sidebar Text Theme'
-  },
-  messages: {
-    successUpdate: 'Successfully updated'
   }
 }

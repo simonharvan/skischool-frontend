@@ -933,6 +933,14 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@neuronet.io/vido@^2.5.11":
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/@neuronet.io/vido/-/vido-2.6.3.tgz#be07fb5c81bb5ad5d68e0b3a0a5996a97e49b229"
+  integrity sha512-iTBCorsaA0+Ku8Wer477g8MsucTIPyvaaqSjAhVnMUpb4aHNuVDKoEhlFlfH/nloFagVRT8DhRcugzSUV2RYcg==
+  dependencies:
+    csstype "^2.6.10"
+    lit-html-optimised "^1.1.7"
+
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.3.tgz#3a582bdb53804c6ba6d146579c46e52130cf4a3b"
@@ -3481,6 +3489,11 @@ core-js@^3.4.3, core-js@^3.4.5:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.4.5.tgz#3dda65611d95699b5eb7742ea451ea052d37aa65"
   integrity sha512-OuvejWH6vIaUo59Ndlh89purNm4DCIy/v3QoYlcGnn+PkYI8BhNHfCuAESrWX+ZPfq9JccVJ+XXgOMy77PJexg==
 
+core-js@^3.4.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.4.tgz#440a83536b458114b9cb2ac1580ba377dc470647"
+  integrity sha512-4paDGScNgZP2IXXilaffL9X7968RuvwlkK3xWtZRVqgd8SYNiVKRJvkFd1aqqEuPfN7E68ZHEp9hDj6lHj4Hyw==
+
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -3787,6 +3800,11 @@ cssstyle@^2.0.0:
   dependencies:
     cssom "~0.3.6"
 
+csstype@^2.6.10:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.10.tgz#e63af50e66d7c266edb6b32909cfd0aabe03928b"
+  integrity sha512-D34BqZU4cIlMCY93rZHbrq9pjTAQJ3U8S8rfBqjwHxkGPThWFjzZDQpgMJY0QViLxth6ZKYiwFBo14RdN44U/w==
+
 current-script-polyfill@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/current-script-polyfill/-/current-script-polyfill-1.0.0.tgz#f31cf7e4f3e218b0726e738ca92a02d3488ef615"
@@ -3876,6 +3894,11 @@ dateformat@~1.0.4-1.2.3:
     get-stdin "^4.0.1"
     meow "^3.3.0"
 
+dayjs@^1.8.17:
+  version "1.8.23"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.23.tgz#07b5a8e759c4d75ae07bdd0ad6977f851c01e510"
+  integrity sha512-NmYHMFONftoZbeOhVz6jfiXI4zSiPN6NoVWJgC0aZQfYVwzy/ZpESPHuCcI0B8BUMpSJQ08zenHDbofOLKq8hQ==
+
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
@@ -3950,6 +3973,11 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
+
+deep-state-observer@^3.3.0:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/deep-state-observer/-/deep-state-observer-3.8.2.tgz#4ea36e24979b2c3051ee9103be2a84af7974b5e4"
+  integrity sha512-tQ8ID9kEHUAPLfNqHYgccjkmbIqyC43qmIgPwruVnsKA3+mgVFZYwchTyocG7pwaI+ad0fZyx706zlm0r7G99g==
 
 deepmerge@^1.2.0, deepmerge@^1.5.2:
   version "1.5.2"
@@ -5379,6 +5407,16 @@ fuse.js@^3.4.6:
   version "3.4.6"
   resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-3.4.6.tgz#545c3411fed88bf2e27c457cab6e73e7af697a45"
   integrity sha512-H6aJY4UpLFwxj1+5nAvufom5b2BT2v45P1MkPvdGIK8fWjQx/7o6tTT1+ALV0yawQvbmvCF0ufl2et8eJ7v7Cg==
+
+gantt-schedule-timeline-calendar@^2.6.8:
+  version "2.6.8"
+  resolved "https://registry.yarnpkg.com/gantt-schedule-timeline-calendar/-/gantt-schedule-timeline-calendar-2.6.8.tgz#95ed0a9dbd910a6da5c432ee3f8e4b35f8cb5c1a"
+  integrity sha512-+PdMlCh9B96PnI5WmPP36A4mxFA3jXXiyzKnvTxaqwX/edYknd6hvRmhZXVwPKPc8BEqtuGOQ9itSMD6mK2R4Q==
+  dependencies:
+    "@neuronet.io/vido" "^2.5.11"
+    dayjs "^1.8.17"
+    deep-state-observer "^3.3.0"
+    resize-observer-polyfill "^1.5.1"
 
 gauge@~2.7.3:
   version "2.7.4"
@@ -7359,6 +7397,11 @@ listr@^0.14.3:
     listr-verbose-renderer "^0.5.0"
     p-map "^2.0.0"
     rxjs "^6.3.3"
+
+lit-html-optimised@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/lit-html-optimised/-/lit-html-optimised-1.1.7.tgz#c41d7b04c325405daec8c856d18dc8462076ded9"
+  integrity sha512-BqXw2hHoalBV8nXUdqH4aHREiFhpprvnU8h/qL1H1/8XTCFdksUjAwJd0TZ9uJTyg8EKVfVHcgA5UxahS3Mk6Q==
 
 load-json-file@^1.0.0:
   version "1.1.0"
@@ -9512,9 +9555,9 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-"raphael@git+https://github.com/nhn/raphael.git#2.2.0-c":
+"raphael@https://github.com/nhn/raphael.git#2.2.0-c":
   version "2.2.0-c"
-  resolved "git+https://github.com/nhn/raphael.git#78a6ed3ec269f33b6457b0ec66f8c3d1f2ed70e0"
+  resolved "https://github.com/nhn/raphael.git#78a6ed3ec269f33b6457b0ec66f8c3d1f2ed70e0"
   dependencies:
     eve "git://github.com/adobe-webplatform/eve.git#eef80ed"
 
@@ -9861,7 +9904,7 @@ requires-port@^1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
-resize-observer-polyfill@^1.5.0:
+resize-observer-polyfill@^1.5.0, resize-observer-polyfill@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
   integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
@@ -11693,6 +11736,15 @@ vue-eslint-parser@^6.0.5:
     espree "^5.0.0"
     esquery "^1.0.1"
     lodash "^4.17.11"
+
+vue-gantt-schedule-timeline-calendar@^1.0.33:
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/vue-gantt-schedule-timeline-calendar/-/vue-gantt-schedule-timeline-calendar-1.0.33.tgz#fdd4c93add062b7f19be746c41ba491fc9e4f8ca"
+  integrity sha512-a3OVCaZXXFqvVL3yD0F97IGAk6NIiMSwgUiqVmhUGcT4MzWyA9rCQdcqqPA33ZqiZn61mkJ9xWrRe7aYt0zhQA==
+  dependencies:
+    core-js "^3.4.4"
+    gantt-schedule-timeline-calendar "^2.6.8"
+    vue "^2.6.10"
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"

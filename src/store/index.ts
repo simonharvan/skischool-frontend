@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { IAppState } from './modules/app'
 import { IUserState } from './modules/user'
+import { ILessonsState } from './modules/lessons'
+import { IInstructorsState } from './modules/instructor'
 import { ITagsViewState } from './modules/tags-view'
 import { IErrorLogState } from './modules/error-log'
 import { IPermissionState } from './modules/permission'
@@ -16,6 +18,8 @@ export interface IRootState {
   errorLog: IErrorLogState
   permission: IPermissionState
   settings: ISettingsState
+  lessons: ILessonsState
+  instructors: IInstructorsState
 }
 
 // Declare empty store first, dynamically register all modules later.

@@ -8,13 +8,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
 import AdminDashboard from './admin/index.vue'
-import EditorDashboard from './editor/index.vue'
 
 @Component({
   name: 'Dashboard',
   components: {
-    AdminDashboard,
-    EditorDashboard
+    AdminDashboard
   }
 })
 export default class extends Vue {
@@ -22,12 +20,6 @@ export default class extends Vue {
 
   get roles() {
     return UserModule.roles
-  }
-
-  created() {
-    if (!this.roles.includes('admin')) {
-      this.currentRole = 'editor-dashboard'
-    }
   }
 }
 </script>

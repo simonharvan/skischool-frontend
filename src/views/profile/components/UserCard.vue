@@ -10,7 +10,7 @@
     <div class="user-profile">
       <div class="box-center">
         <pan-thumb
-          :image="user.avatar"
+          :image="require('@/assets/images/user.png')"
           :height="'100px'"
           :width="'100px'"
           :hoverable="false"

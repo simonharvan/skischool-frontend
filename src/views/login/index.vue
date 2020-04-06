@@ -20,9 +20,9 @@
           <svg-icon name="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
+          ref="email"
+          v-model="loginForm.email"
+          :placeholder="$t('login.email')"
           name="username"
           type="text"
           autocomplete="on"
@@ -59,37 +59,7 @@
       >
         {{ $t('login.logIn') }}
       </el-button>
-
-      <div style="position:relative">
-        <div class="tips">
-          <span>{{ $t('login.username') }} : admin </span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }} </span>
-        </div>
-        <div class="tips">
-          <span>{{ $t('login.username') }} : editor </span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }} </span>
-        </div>
-
-        <el-button
-          class="thirdparty-button"
-          type="primary"
-          @click="showDialog=true"
-        >
-          {{ $t('login.thirdparty') }}
-        </el-button>
-      </div>
     </el-form>
-
-    <el-dialog
-      :title="$t('login.thirdparty')"
-      :visible.sync="showDialog"
-    >
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
   </div>
 </template>
 
@@ -99,7 +69,7 @@ import { Route } from 'vue-router'
 import { Dictionary } from 'vue-router/types/router'
 import { Form as ElForm, Input } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
-import { isValidUsername } from '@/utils/validate'
+import { isValidEmail, isValidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect/index.vue'
 import SocialSign from './components/SocialSignin.vue'
 
@@ -125,12 +95,21 @@ export default class extends Vue {
       callback()
     }
   }
+
+  private validateEmail = (rule: any, value: string, callback: Function) => {
+    if (!isValidEmail(value)) {
+      callback(new Error('The password can not be less than 6 digits'))
+    } else {
+      callback()
+    }
+  }
+
   private loginForm = {
-    username: 'admin',
-    password: '111111'
+    email: 'simon@bero.tech',
+    password: 'password'
   }
   private loginRules = {
-    username: [{ validator: this.validateUsername, trigger: 'blur' }],
+    email: [{ validator: this.validateEmail, trigger: 'blur' }],
     password: [{ validator: this.validatePassword, trigger: 'blur' }]
   }
   private passwordType = 'password'
@@ -151,8 +130,8 @@ export default class extends Vue {
   }
 
   mounted() {
-    if (this.loginForm.username === '') {
-      (this.$refs.username as Input).focus()
+    if (this.loginForm.email === '') {
+      (this.$refs.email as Input).focus()
     } else if (this.loginForm.password === '') {
       (this.$refs.password as Input).focus()
     }
