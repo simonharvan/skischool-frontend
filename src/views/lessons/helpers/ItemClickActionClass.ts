@@ -1,9 +1,11 @@
 import {Item} from "gantt-schedule-timeline-calendar"
-// @ts-ignore
-import {clickCallback} from "@/views/lessons/index.vue";
+
+
+let listener: any;
 
 export class ItemClickActionClass {
     private data: Item;
+
 
     constructor(element: any, data: Item) {
         console.log('Create click action', element, data)
@@ -21,6 +23,14 @@ export class ItemClickActionClass {
     }
 
     onClick(event: Event) {
-        clickCallback(this.data, event)
+        if (listener) {
+            listener(this.data, event)
+        }
     }
+
+
+}
+
+export const setListener = function(listr: any) {
+    listener = listr
 }

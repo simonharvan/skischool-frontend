@@ -227,16 +227,20 @@ export default class extends Vue {
         }
 
         @Watch('lesson')
-        private onLessonChange(value: ILesson) {
+        private onLessonChange(lesson: ILesson) {
           this.drawer = true
 
           let some = this.instructors.find((instructor: IInstructor) => {
-            if (value.instructor && instructor.id === value.instructor.id) {
+            if (lesson.instructor && instructor.id === lesson.instructor.id) {
               return instructor
             }
           })
           if (some) {
             this.instructor = some
+          }
+
+          if (lesson.client) {
+            this.client = lesson.client
           }
         }
 
@@ -282,6 +286,23 @@ export default class extends Vue {
             instructor_id: this.instructor.id
           }
 
+          if (this.lesson.id > 0) {
+            payload.id = this.lesson.id
+            LessonsModule.UpdateLesson(payload).then(() => {
+              this.loading = false
+              Message({
+                message: this.$t('messages.successUpdate').toString(),
+                type: 'success',
+                duration: 2 * 1000
+              })
+              this.$emit('saved')
+              this.closeForm()
+            }).catch(() => {
+              this.loading = false
+            })
+            return
+          }
+
           if (typeof this.client.id === 'number') {
             payload.client = {} as any
             payload.client.id = this.client.id
@@ -292,6 +313,7 @@ export default class extends Vue {
             payload.client.phone = this.client.phone
             payload.client.phone_2 = this.client.phone_2
           }
+
           LessonsModule.CreateLesson(payload).then(() => {
             this.loading = false
             Message({
@@ -299,9 +321,10 @@ export default class extends Vue {
               type: 'success',
               duration: 2 * 1000
             })
+            this.$emit('saved')
+            this.closeForm()
           }).catch(() => {
             this.loading = false
-            this.closeForm()
           })
         }
 }

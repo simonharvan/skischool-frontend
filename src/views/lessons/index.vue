@@ -36,7 +36,7 @@
                 :config="config"
                 @state="handleOnState"
         />
-        <lesson-edit :lesson="editLesson"/>
+        <lesson-edit :lesson="editLesson" @saved="handleSaved"/>
     </div>
 </template>
 
@@ -50,7 +50,7 @@
     import {AddItemStyleClass} from '@/views/lessons/helpers/AddItemStyleClass'
     import {formatDateTimeToBackend, formatDateTimeToBackendWithOffset, formatDateToBackend} from '@/utils'
     import {Message} from 'element-ui'
-    import {ItemClickActionClass} from '@/views/lessons/helpers/ItemClickActionClass'
+    import {ItemClickActionClass, setListener} from '@/views/lessons/helpers/ItemClickActionClass'
     import {plugins} from '@/views/lessons/helpers/Plugins'
     import LessonEdit from '@/components/LessonEdit/index'
 
@@ -93,6 +93,7 @@
                     }
                 )
             )
+            setListener(this.handleClickLesson)
         }
 
         get selectedDate() {
@@ -240,6 +241,15 @@
             console.log(this.editLesson)
         }
 
+        private handleClickLesson(data: any, event: Event) {
+            console.log('Click lesson', data)
+            this.editLesson = data.item.data
+        }
+
+        private handleSaved() {
+            this.fetchLessons()
+        }
+
         @Watch('selectedDate')
         private onSelectedDate() {
             this.fetchLessons()
@@ -304,9 +314,7 @@
         }
     }
 
-    export function clickCallback(data: any, event: any) {
-        alert(`Item ${data.item.id} clicked!`)
-    }
+
 
 </script>
 <style lang="scss" scoped>
