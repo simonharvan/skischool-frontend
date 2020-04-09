@@ -197,5 +197,8 @@ export default {
     email: 'Email',
     phone: 'Phone',
     phone2: 'Phone 2',
-  }
+  },
+  delete: 'Delete',
+  cancel: 'Cancel',
+  confirm: 'Confirm',
 }

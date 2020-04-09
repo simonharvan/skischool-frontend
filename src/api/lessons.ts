@@ -21,4 +21,10 @@ export const updateLesson = (id: number, data: any) =>
         data
     })
 
+export const deleteLesson = (id: number) =>
+    request({
+        url: `/lessons/${id}`,
+        method: 'delete',
+
+    })
 

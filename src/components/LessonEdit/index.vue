@@ -123,7 +123,10 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="20">
+      <el-row
+        v-if="visibleMore"
+        :gutter="20"
+      >
         <el-col :span="24">
           <el-input
             v-model="client.email"
@@ -132,7 +135,10 @@
           />
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row
+        v-if="visibleMore"
+        :gutter="20"
+      >
         <el-col :span="24">
           <el-input
             v-model="client.phone"
@@ -141,7 +147,10 @@
           />
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row
+        v-if="visibleMore"
+        :gutter="20"
+      >
         <el-col :span="24">
           <el-input
             v-model="client.phone_2"
@@ -157,8 +166,28 @@
       >
         <el-col :span="12">
           <el-button @click="closeForm">
-            Cancel
+            {{ $t('cancel') }}
           </el-button>
+        </el-col>
+        <el-col
+          v-if="lesson.id >= 0"
+          :span="12"
+        >
+          <el-popconfirm
+            :confirm-button-text="$t('confirm')"
+            :cancel-button-text="$t('cancel')"
+            icon="el-icon-info"
+            icon-color="red"
+            title="Are you sure to delete this?"
+            @onConfirm="handleDelete"
+          >
+            <el-button
+              slot="reference"
+              type="danger"
+            >
+              {{ $t('delete') }}
+            </el-button>
+          </el-popconfirm>
         </el-col>
         <el-col :span="12">
           <el-button
@@ -190,6 +219,7 @@ import { Message } from 'element-ui'
     })
 export default class extends Vue {
         @Prop({ default: Object }) private lesson!: ILesson
+        @Prop({ default: Boolean }) private changeValue!: boolean
 
         private drawer = false
         private loading = false
@@ -197,6 +227,8 @@ export default class extends Vue {
         private instructor = {} as IInstructor
         private clients: IClient[] = []
         private client = {} as IClient
+
+        private visibleMore = false
 
         get instructors() {
           return InstructorsModule.instructors
@@ -241,6 +273,33 @@ export default class extends Vue {
 
           if (lesson.client) {
             this.client = lesson.client
+            this.pushIfNotIn(lesson.client)
+            this.visibleMore = true
+          }
+        }
+
+        private pushIfNotIn(client: IClient) {
+          if (!this.clients.some((value) => value.id === client.id)) {
+            this.clients.push(client)
+          }
+        }
+
+        @Watch('changeValue')
+        private onChangeValue() {
+          this.drawer = true
+          let some = this.instructors.find((instructor: IInstructor) => {
+            if (this.lesson.instructor && instructor.id === this.lesson.instructor.id) {
+              return instructor
+            }
+          })
+          if (some) {
+            this.instructor = some
+          }
+
+          if (this.lesson.client) {
+            this.client = this.lesson.client
+            this.pushIfNotIn(this.lesson.client)
+            this.visibleMore = true
           }
         }
 
@@ -263,6 +322,7 @@ export default class extends Vue {
           } else {
             this.client.name = value
           }
+          this.visibleMore = true
         }
 
         private closeForm() {
@@ -272,6 +332,7 @@ export default class extends Vue {
         private handleClose(done: any) {
           this.client = {} as IClient
           this.instructor = {} as IInstructor
+          this.visibleMore = false
           done()
         }
 
@@ -281,12 +342,14 @@ export default class extends Vue {
             from: this.lesson.from,
             to: this.lesson.to,
             price: this.lesson.price,
-            name: this.lesson.name,
             type: this.lesson.type,
             instructor_id: this.instructor.id
           }
+          if (this.lesson.name !== '') {
+            payload.name = this.lesson.name
+          }
 
-          if (this.lesson.id > 0) {
+          if (this.lesson.id >= 0) {
             payload.id = this.lesson.id
             LessonsModule.UpdateLesson(payload).then(() => {
               this.loading = false
@@ -300,6 +363,7 @@ export default class extends Vue {
             }).catch(() => {
               this.loading = false
             })
+
             return
           }
 
@@ -325,6 +389,13 @@ export default class extends Vue {
             this.closeForm()
           }).catch(() => {
             this.loading = false
+          })
+        }
+
+        private handleDelete() {
+          LessonsModule.DeleteLesson({ id: this.lesson.id }).then(() => {
+            this.$emit('deleted', this.lesson.id)
+            this.closeForm()
           })
         }
 }

@@ -36,7 +36,7 @@
                 :config="config"
                 @state="handleOnState"
         />
-        <lesson-edit :lesson="editLesson" @saved="handleSaved"/>
+        <lesson-edit :lesson="editLesson" :changeValue="changeValue" @saved="handleSaved" @deleted="handleDeleted"/>
     </div>
 </template>
 
@@ -77,6 +77,7 @@
         private itemTimeout: NodeJS.Timeout | undefined;
 
         private editLesson: ILesson = {} as ILesson
+        private changeValue: boolean = false;
 
         private handleOnState(state: any) {
             this.state = state
@@ -151,7 +152,6 @@
                     label: instructor.name
                 }
             })
-
             this.lessons.forEach((lesson: ILesson) => {
                 if (lesson.instructor && lesson.client) {
                     result.chart.items[lesson.id] = {
@@ -244,10 +244,19 @@
         private handleClickLesson(data: any, event: Event) {
             console.log('Click lesson', data)
             this.editLesson = data.item.data
+            this.changeValue = !this.changeValue
         }
 
         private handleSaved() {
             this.fetchLessons()
+        }
+
+        private handleDeleted(id: number) {
+
+            let index = this.lessons.findIndex((lesson) => lesson.id !== id)
+            console.log('delete', this.lessons, id, index)
+            this.lessons.splice(index, 1)
+            this.state.update('config.chart.items', this.config.chart.items)
         }
 
         @Watch('selectedDate')
@@ -262,7 +271,11 @@
 
         private async fetchLessons() {
             const date = formatDateToBackend(this.selectedDate)
-            this.lessons = await LessonsModule.GetLessons({date: date, name: null})
+            LessonsModule.GetLessons({date: date, name: null}).then((values) => {
+                this.lessons = values
+                this.state.update('config.chart.items',this.config.chart.items)
+            })
+
         }
 
         private async updateLesson(value: any, eventInfo: any) {
