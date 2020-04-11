@@ -1,7 +1,7 @@
 import {Action, getModule, Module, Mutation, VuexModule} from 'vuex-module-decorators'
 
 import store from '@/store'
-import {createLesson, deleteLesson, getLessons, updateLesson} from "@/api/lessons";
+import {createLesson, deleteLesson, getLessons, payLesson, preparePayLesson, updateLesson} from "@/api/lessons";
 import {ILesson} from "@/api/types";
 
 export interface ILessonsState {
@@ -67,6 +67,22 @@ class Lessons extends VuexModule implements ILessonsState {
     public SetSelectedDate(date: Date) {
         this.SET_SELECTED_DATE(date)
     }
+
+    @Action({rawError: true})
+    public async PreparePay(payload: {id: number}) {
+        const data: any = await preparePayLesson(payload.id)
+        const result: ILesson[] = data.lessons
+        return result
+    }
+
+    @Action({rawError: true})
+    public async Pay(payload: {ids: number[], price: number}) {
+        const lesson = { lesson: payload }
+        const data: any = await payLesson(lesson)
+        return data
+    }
 }
+
+
 
 export const LessonsModule = getModule(Lessons)

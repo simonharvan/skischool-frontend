@@ -8,6 +8,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import ServiceWorkerUpdatePopup from '@/pwa/components/ServiceWorkerUpdatePopup.vue'
+import {InstructorsModule} from "@/store/modules/instructor";
 
 @Component({
   name: 'App',
@@ -15,5 +16,9 @@ import ServiceWorkerUpdatePopup from '@/pwa/components/ServiceWorkerUpdatePopup.
     ServiceWorkerUpdatePopup
   }
 })
-export default class extends Vue {}
+export default class extends Vue {
+  mounted() {
+    InstructorsModule.GetInstructors({name: null, gender: null, teaching: null, date: null})
+  }
+}
 </script>

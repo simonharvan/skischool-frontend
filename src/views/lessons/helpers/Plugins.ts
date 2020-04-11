@@ -20,6 +20,7 @@ export const plugins = [
             } else {
                 date.setMinutes(0)
             }
+            date.setSeconds(0)
             return date.getTime()
         },
         snapEnd(time: number, diff: number, item: any) {
@@ -32,6 +33,7 @@ export const plugins = [
             } else {
                 date.setMinutes(0)
             }
+            date.setSeconds(0)
             return date.getTime()
         }
     }),

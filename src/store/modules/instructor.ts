@@ -20,10 +20,10 @@ class Instructors extends VuexModule implements IInstructorsState {
     }
 
     @Action({rawError: true})
-    public async GetInstructors(payload: { name: string | null, gender: string | null, teaching: string | null }) {
+    public async GetInstructors(payload: { name: string | null, gender: string | null, teaching: string | null, date: string | null }) {
         const data: any = await getInstructors(payload)
         const result: IInstructor[] = data.instructors
-        if (!payload.name && !payload.gender && !payload.teaching) {
+        if (!payload.name && !payload.gender && !payload.teaching && !payload.date) {
             this.context.commit('SET_INSTRUCTORS', result)
         }
         return result

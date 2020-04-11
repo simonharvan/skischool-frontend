@@ -25,6 +25,18 @@ export const deleteLesson = (id: number) =>
     request({
         url: `/lessons/${id}`,
         method: 'delete',
+    })
 
+export const preparePayLesson = (id: number) =>
+    request({
+        url: `/lessons/${id}/prepare-pay`,
+        method: 'get',
+    })
+
+export const payLesson = (data: any) =>
+    request({
+        url: `/lessons/pay`,
+        method: 'post',
+        data
     })
 

@@ -8,6 +8,7 @@ interface ISettings {
   sidebarTextTheme: boolean // If true, will change active text color for sidebar based on theme
   devServerPort: number // Port number for webpack-dev-server
   mockServerPort: number // Port number for mock server
+  pricePerHour: number
 }
 
 // You can customize below settings :)
@@ -20,7 +21,8 @@ const settings: ISettings = {
   errorLog: ['production'],
   sidebarTextTheme: true,
   devServerPort: 9527,
-  mockServerPort: 9528
+  mockServerPort: 9528,
+  pricePerHour: 20
 }
 
 export default settings

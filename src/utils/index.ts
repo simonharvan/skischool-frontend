@@ -69,6 +69,10 @@ export const formatTimeToBackend = (date: Date) => {
     return date.toTimeString().substring(0,5)
 }
 
+export const formatNiceDateTime = (date: Date) => {
+    const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+    return date.toLocaleDateString() + ' ' + date.getHours() + ':' +  minutes
+}
 
 
 export const generateId = (length: number, prefix: string = '') => {

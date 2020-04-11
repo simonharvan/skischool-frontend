@@ -1,7 +1,7 @@
 <template>
     <div class="lessons-container">
         <el-row class="controls">
-            <el-col :span="10">
+            <el-col :span="9">
                 <el-button-group>
                     <el-button
                             type="primary"
@@ -24,6 +24,14 @@
                     </el-button>
                 </el-button-group>
             </el-col>
+            <el-col :span="6">
+                <el-date-picker
+                        v-model="selectedDate"
+                        type="date"
+                        placeholder="Pick a day"
+                        format="d.M.yyyy">
+                </el-date-picker>
+            </el-col>
             <el-col :span="2">
                 <el-button
                         type="success"
@@ -36,7 +44,16 @@
                 :config="config"
                 @state="handleOnState"
         />
-        <lesson-edit :lesson="editLesson" :changeValue="changeValue" @saved="handleSaved" @deleted="handleDeleted"/>
+        <lesson-edit
+                :lesson="editLesson"
+                :changeValue="changeValue"
+                @saved="handleSaved"
+                @pay="handlePreparePay"
+                @deleted="handleDeleted"/>
+        <lesson-pay
+                :lesson="payLesson"
+                @paid="handlePaid"
+                @discard="handleDiscardPay" />
     </div>
 </template>
 
@@ -53,33 +70,33 @@
     import {ItemClickActionClass, setListener} from '@/views/lessons/helpers/ItemClickActionClass'
     import {plugins} from '@/views/lessons/helpers/Plugins'
     import LessonEdit from '@/components/LessonEdit/index'
-
+    import LessonPay from '@/components/LessonPay/index'
+    import GSTC from "gantt-schedule-timeline-calendar";
+    import DeepState from 'node_modules/deep-state-observer/index'
     @Component({
         name: 'Lessons',
         components: {
             GanttScheduler,
-            LessonEdit
+            LessonEdit,
+            LessonPay
         }
     })
 
     export default class extends Vue {
         private currentRole = 'admin-dashboard'
         private subs: any[] = []
-        private state: any;
+        private state: DeepState | undefined;
 
         private lessons: ILesson[] = [];
         private instructors: IInstructor[] = [];
-
-        private colors = [
-            'green', 'yellow', 'red', 'blue',
-            'purple', 'burgundy', 'greenish', 'light-green'
-        ]
-        private itemTimeout: NodeJS.Timeout | undefined;
+        private itemTimeout: NodeJS.Timeout | undefined
 
         private editLesson: ILesson = {} as ILesson
-        private changeValue: boolean = false;
+        private changeValue: boolean = false
 
-        private handleOnState(state: any) {
+        private payLesson: ILesson | null = null
+
+        private handleOnState(state: DeepState) {
             this.state = state
             console.log('handleOnState()', state)
             this.subs.push(
@@ -101,6 +118,12 @@
             return LessonsModule.selectedDate
         }
 
+        set selectedDate(date: Date) {
+            date.setHours(8)
+            console.log('select date', date)
+            LessonsModule.SetSelectedDate(date)
+        }
+
         get startOfSelectedDate() {
             const result = new Date(this.selectedDate.getTime())
             result.setHours(8)
@@ -119,7 +142,8 @@
 
         get config() {
             let result: any = {
-                height: 300,
+                height: 500,
+                utcMode: false,
                 plugins: plugins,
                 list: {
                     toggle: {
@@ -152,28 +176,41 @@
                     label: instructor.name
                 }
             })
-            this.lessons.forEach((lesson: ILesson) => {
-                if (lesson.instructor && lesson.client) {
-                    result.chart.items[lesson.id] = {
-                        id: lesson.id,
-                        rowId: lesson.instructor.id,
-                        label: lesson.name + ' (' + lesson.client.phone + ')',
-                        color: this.colors[lesson.instructor.id % 8],
-                        data: lesson,
-                        time: {
-                            start: new Date(lesson.from).getTime(),
-                            end: new Date(lesson.to).getTime()
+
+            if (this.lessons.length > 0) {
+                this.lessons.forEach((lesson: ILesson) => {
+                    if (lesson.instructor && lesson.client) {
+                        result.chart.items[lesson.id] = {
+                            id: lesson.id,
+                            rowId: lesson.instructor.id,
+                            label: lesson.name + ' (' + lesson.client.phone + ')',
+                            data: lesson,
+                            time: {
+                                start: new Date(lesson.from).getTime(),
+                                end: new Date(lesson.to).getTime()
+                            }
                         }
                     }
+                })
+            } else {
+                // GSTC timeline is not working withou items
+                result.chart.items['0'] = {
+                    id: 0,
+                    rowId: 0,
+                    label: '1',
+                    time: {
+                        start: this.startOfSelectedDate.getTime(),
+                        end: this.startOfSelectedDate.getTime()
+                    }
                 }
-            })
+            }
+
+
             result.chart.time = {
                 from: this.startOfSelectedDate.getTime(),
                 to: this.endOfSelectedDate.getTime(),
                 zoom: 15.2,
-                period: 'hour',
-                dates: {},
-                maxWidth: {}
+                period: 'hour'
             }
             console.log('Config', result)
             return result
@@ -190,26 +227,40 @@
         private handleYesterday() {
             const date = new Date()
             date.setDate(this.selectedDate.getDate() - 1)
+            console.log('Yesterdat', date)
             LessonsModule.SetSelectedDate(date)
         }
 
         private handleTommorow() {
             const date = new Date()
             date.setDate(this.selectedDate.getDate() + 1)
+            console.log('Tommorow', date)
             LessonsModule.SetSelectedDate(date)
         }
 
         private handleToday() {
             const date = new Date()
+            console.log('Today', date)
             LessonsModule.SetSelectedDate(date)
         }
 
         private handleNewLesson() {
+            if (!this.state) {
+                return
+            }
             const selected: string[] = this.state.get('config.plugin.selection').selected['chart-timeline-grid-row-blocks']
 
             const date = new Date()
+            if (date.getMinutes() <= 15) {
+                date.setMinutes(0)
+            } else if (date.getMinutes() > 15 && date.getMinutes() < 45) {
+                date.setMinutes(30)
+            } else {
+                date.setHours(date.getHours() + 3)
+                date.setMinutes(0)
+            }
+            date.setSeconds(0)
             console.log(date)
-
             let from = formatDateTimeToBackend(date)
             date.setHours(date.getHours() + 1)
             let to = formatDateTimeToBackend(date)
@@ -238,7 +289,25 @@
                     id: rowId
                 }
             } as ILesson
+            this.changeValue = !this.changeValue
             console.log(this.editLesson)
+        }
+
+        private handlePreparePay(data: ILesson) {
+            console.log('Lesson prepare pay', data)
+            this.payLesson = data
+        }
+
+        private handlePaid(paid: ILesson[]) {
+            this.lessons.forEach((lesson) => {
+                if (paid.some(pay => pay.id === lesson.id)) {
+                    lesson.status = 'paid'
+                }
+            })
+
+            if (this.state) {
+                this.state.update('config.chart.items', this.config.chart.items)
+            }
         }
 
         private handleClickLesson(data: any, event: Event) {
@@ -248,34 +317,46 @@
         }
 
         private handleSaved() {
-            this.fetchLessons()
+            this.fetchData()
         }
 
         private handleDeleted(id: number) {
-
-            let index = this.lessons.findIndex((lesson) => lesson.id !== id)
+            let index = this.lessons.findIndex((lesson) => lesson.id === id)
             console.log('delete', this.lessons, id, index)
             this.lessons.splice(index, 1)
-            this.state.update('config.chart.items', this.config.chart.items)
+            if (this.state) {
+                this.state.update('config.chart.items', this.config.chart.items)
+            }
+        }
+
+        private handleDiscardPay() {
+            this.payLesson = null
         }
 
         @Watch('selectedDate')
         private onSelectedDate() {
-            this.fetchLessons()
+            this.fetchData()
         }
 
-        private async fetchData() {
+        private fetchData() {
             this.fetchLessons()
-            this.instructors = await InstructorsModule.GetInstructors({name: null, gender: null, teaching: null})
+            this.fetchInstructors()
         }
 
-        private async fetchLessons() {
+        private fetchLessons() {
             const date = formatDateToBackend(this.selectedDate)
             LessonsModule.GetLessons({date: date, name: null}).then((values) => {
                 this.lessons = values
-                this.state.update('config.chart.items',this.config.chart.items)
             })
+        }
 
+        private fetchInstructors() {
+            InstructorsModule.GetInstructors({name: null, gender: null, teaching: null, date: formatDateToBackend(this.selectedDate)}).then((values) => {
+                this.instructors = values
+                if (this.state) {
+                    this.state.update('config.list.rows', this.config.list.rows)
+                }
+            })
         }
 
         private async updateLesson(value: any, eventInfo: any) {
@@ -303,20 +384,20 @@
                 return
             }
 
-            const from = formatDateTimeToBackendWithOffset(new Date(value.time.start))
-            const to = formatDateTimeToBackendWithOffset(new Date(value.time.end))
-            console.log(value, from, to)
+            lesson.from = formatDateTimeToBackendWithOffset(new Date(value.time.start))
+            lesson.to = formatDateTimeToBackendWithOffset(new Date(value.time.end))
+
             const payload = {
                 id: lesson.id,
-                from: from,
-                to: to,
+                from: lesson.from,
+                to: lesson.to,
                 price: lesson.price,
                 name: lesson.name,
                 type: lesson.type,
                 instructor_id: value.rowId
             }
 
-            console.log('UPDATE LESSON', payload, from, to)
+            console.log('UPDATE LESSON', payload)
             LessonsModule.UpdateLesson(payload).then((value: ILesson) => {
                 Message({
                     message: this.$t('messages.successUpdate').toString(),
@@ -344,6 +425,13 @@
         }
 
         ::v-deep .gantt-schedule-timeline-calendar__chart-timeline-items-row-item {
+            &.paid {
+                -webkit-box-shadow: 0 0 5px 0 rgba(50,50,50,1);
+                -moz-box-shadow: 0 0 5px rgba(50,50,50,1);
+                box-shadow: 0 0 5px rgba(50,50,50,1);
+                border: 1px solid rgba(50,50,50,1);
+                background: #94C23E !important;
+            }
             &.colored.green {
                 background: #17A46A;
             }
