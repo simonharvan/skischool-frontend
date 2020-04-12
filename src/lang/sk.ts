@@ -1,7 +1,8 @@
 export default {
   route: {
-    dashboard: 'Dashboard',
-    lessons: 'Lekcie',
+    dashboard: 'Plocha',
+    lessons: 'Hodiny',
+    attendance: 'Dochádzka',
     documentation: 'Documentation',
     guide: 'Guide',
     permission: 'Permission',
@@ -63,15 +64,12 @@ export default {
     clipboard: 'Clipboard',
     i18n: 'I18n',
     externalLink: 'External Link',
-    profile: 'Profile'
+    profile: 'Profil'
   },
   navbar: {
-    logOut: 'Log Out',
-    dashboard: 'Dashboard',
-    github: 'Github',
-    theme: 'Theme',
-    size: 'Global Size',
-    profile: 'Profile'
+    logOut: 'Odhlásiť sa',
+    size: 'Veľkosť textu',
+    profile: 'Profil'
   },
   login: {
     title: 'Login Form',
@@ -172,5 +170,52 @@ export default {
     showSidebarLogo: 'Sidebar Logo',
     fixedHeader: 'Fixed Header',
     sidebarTextTheme: 'Sidebar Text Theme'
-  }
+  },
+  messages: {
+    successCreate: 'Úspešne vytvorené',
+    successUpdate: 'Úspešne aktualizované'
+  },
+  lessons: {
+    yesterday: 'Včera',
+    today: 'Dnes',
+    tomorrow: 'Zajtra',
+    title: 'Detail hodiny',
+    name: 'Meno',
+    type: 'SKI/SNB',
+    ski: 'SKI',
+    snb: 'SNB',
+    price: 'Cena',
+    submitting: 'Ukladám ...',
+    submit: 'Uložiť',
+    startTime: 'Začiatok',
+    endTime: 'Koniec',
+    search: 'Napíšte meno',
+    instructor: 'Inštruktor',
+    client: 'Klient',
+    email: 'Email',
+    phone: 'Telefón',
+    phone2: 'Telefón 2',
+    pay: 'Zaplatiť',
+    totalPrice: 'Cena celkovo',
+    areYouSure: 'Si si istý, že chceš vymazať?',
+    weekdays: 'Nedeľa_Pondelok_Utorok_Streda_Štvrtok_Piatok_Sobota'.split('_'),
+    weekdaysShort: 'ne_po_ut_st_št_pi_so'.split('_'),
+    weekdaysMin: 'ne_po_ut_st_št_pi_so'.split('_'),
+    months: 'Január_Február_Marec_Apríl_Máj_Jún_Júl_August_September_Október_November_December'.split('_'),
+    monthsShort: 'jan_feb_mar_apr_máj_jún_júl_aug_sep_okt_nov_dec'.split('_'),
+  },
+  dashboard: {
+    newClients: 'Nových klient za posl. mesiac',
+    duration: 'Hodín za posl. mesiac',
+    unpaid: 'Ešte nezaplatené',
+    paidThisMonth: 'Zaplatené za posl. mesiac',
+    bestInstructor: 'Najlepší inštruktor',
+    bestInstructorDuration: 'Odučené',
+    minutes: 'Odučených',
+    total: 'Hodnota odučených'
+  },
+  save: 'Uložiť',
+  delete: 'Vymazať',
+  cancel: 'Zrušiť',
+  confirm: 'Potvrdiť',
 }

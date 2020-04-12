@@ -9,6 +9,8 @@ import {IErrorLogState} from './modules/error-log'
 import {IPermissionState} from './modules/permission'
 import {ISettingsState} from './modules/settings'
 import {IClientsState} from "@/store/modules/clients";
+import {IAttendanceState} from "@/store/modules/attendance";
+import {IStats} from "@/api/types";
 
 Vue.use(Vuex)
 
@@ -22,6 +24,8 @@ export interface IRootState {
     lessons: ILessonsState
     instructors: IInstructorsState
     clients: IClientsState
+    attendance: IAttendanceState
+    dashboard: IStats
 }
 
 // Declare empty store first, dynamically register all modules later.

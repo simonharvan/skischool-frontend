@@ -1,43 +1,42 @@
 <template>
     <div class="lessons-container">
         <el-row class="controls">
-            <el-col :span="9">
-                <el-button-group>
-                    <el-button
-                            type="primary"
-                            icon="el-icon-arrow-left"
-                            @click.native="handleYesterday"
-                    >
-                        {{ $t('lessons.yesterday') }}
-                    </el-button>
-                    <el-button
-                            type="primary"
-                            @click.native="handleToday"
-                    >
-                        {{ $t('lessons.today') }}
-                    </el-button>
-                    <el-button
-                            type="primary"
-                            @click.native="handleTommorow"
-                    >
-                        {{ $t('lessons.tomorrow') }} <i class="el-icon-arrow-right"/>
-                    </el-button>
-                </el-button-group>
-            </el-col>
-            <el-col :span="6">
-                <el-date-picker
-                        v-model="selectedDate"
-                        type="date"
-                        placeholder="Pick a day"
-                        format="d.M.yyyy">
-                </el-date-picker>
-            </el-col>
-            <el-col :span="2">
+
+            <el-button-group>
                 <el-button
-                        type="success"
-                        icon="el-icon-plus"
-                        @click.native="handleNewLesson"/>
-            </el-col>
+                        type="primary"
+                        icon="el-icon-arrow-left"
+                        @click.native="handleYesterday"
+                >
+                    {{ $t('lessons.yesterday') }}
+                </el-button>
+                <el-button
+                        type="primary"
+                        @click.native="handleToday"
+                >
+                    {{ $t('lessons.today') }}
+                </el-button>
+                <el-button
+                        type="primary"
+                        @click.native="handleTommorow"
+                >
+                    {{ $t('lessons.tomorrow') }} <i class="el-icon-arrow-right"/>
+                </el-button>
+            </el-button-group>
+
+            <el-date-picker
+                    v-model="selectedDate"
+                    type="date"
+                    placeholder="Pick a day"
+                    format="d.M.yyyy">
+            </el-date-picker>
+
+
+            <el-button
+                    type="success"
+                    icon="el-icon-plus"
+                    @click.native="handleNewLesson"/>
+
         </el-row>
         <gantt-scheduler
                 ref="scheduler"
@@ -53,7 +52,7 @@
         <lesson-pay
                 :lesson="payLesson"
                 @paid="handlePaid"
-                @discard="handleDiscardPay" />
+                @discard="handleDiscardPay"/>
     </div>
 </template>
 
@@ -71,8 +70,9 @@
     import {plugins} from '@/views/lessons/helpers/Plugins'
     import LessonEdit from '@/components/LessonEdit/index'
     import LessonPay from '@/components/LessonPay/index'
-    import GSTC from "gantt-schedule-timeline-calendar";
     import DeepState from 'node_modules/deep-state-observer/index'
+    import {AppModule} from "@/store/modules/app";
+
     @Component({
         name: 'Lessons',
         components: {
@@ -114,6 +114,10 @@
             setListener(this.handleClickLesson)
         }
 
+        get language() {
+            return AppModule.language
+        }
+
         get selectedDate() {
             return LessonsModule.selectedDate
         }
@@ -127,14 +131,14 @@
         get startOfSelectedDate() {
             const result = new Date(this.selectedDate.getTime())
             result.setHours(8)
-            result.setMinutes(0)
+            result.setMinutes(30)
             result.setSeconds(0)
             return result
         }
 
         get endOfSelectedDate() {
             const result = new Date(this.selectedDate.getTime())
-            result.setHours(17)
+            result.setHours(16)
             result.setMinutes(0)
             result.setSeconds(0)
             return result
@@ -156,7 +160,7 @@
                                 data: 'label',
                                 width: 200,
                                 header: {
-                                    content: 'Name'
+                                    content: this.$t('lessons.instructor')
                                 }
                             }
                         }
@@ -168,6 +172,15 @@
                 },
                 actions: {
                     'chart-timeline-items-row-item': [ResizingItemClass, AddItemStyleClass, ItemClickActionClass]
+                },
+                locale: {
+                    name: this.language,
+                    weekdays: this.$t('lessons.weekdays'),
+                    weekdaysShort: this.$t('lessons.weekdaysShort'),
+                    weekdaysMin: this.$t('lessons.weekdaysMin'),
+                    months: this.$t('lessons.months'),
+                    monthsShort: this.$t('lessons.monthsShort'),
+                    weekStart: 1,
                 }
             }
             this.instructors.forEach((instructor: IInstructor) => {
@@ -351,7 +364,12 @@
         }
 
         private fetchInstructors() {
-            InstructorsModule.GetInstructors({name: null, gender: null, teaching: null, date: formatDateToBackend(this.selectedDate)}).then((values) => {
+            InstructorsModule.GetInstructors({
+                name: null,
+                gender: null,
+                teaching: null,
+                date: formatDateToBackend(this.selectedDate)
+            }).then((values) => {
                 this.instructors = values
                 if (this.state) {
                     this.state.update('config.list.rows', this.config.list.rows)
@@ -409,7 +427,6 @@
     }
 
 
-
 </script>
 <style lang="scss" scoped>
     .lessons-container {
@@ -417,6 +434,9 @@
 
         .controls {
             margin-bottom: 20px;
+            & > * {
+                margin-right: 10px;
+            }
         }
 
         ::v-deep .gantt-schedule-timeline-calendar__list-column-header,
@@ -426,12 +446,13 @@
 
         ::v-deep .gantt-schedule-timeline-calendar__chart-timeline-items-row-item {
             &.paid {
-                -webkit-box-shadow: 0 0 5px 0 rgba(50,50,50,1);
-                -moz-box-shadow: 0 0 5px rgba(50,50,50,1);
-                box-shadow: 0 0 5px rgba(50,50,50,1);
-                border: 1px solid rgba(50,50,50,1);
+                -webkit-box-shadow: 0 0 5px 0 rgba(50, 50, 50, 1);
+                -moz-box-shadow: 0 0 5px rgba(50, 50, 50, 1);
+                box-shadow: 0 0 5px rgba(50, 50, 50, 1);
+                border: 1px solid rgba(50, 50, 50, 1);
                 background: #94C23E !important;
             }
+
             &.colored.green {
                 background: #17A46A;
             }

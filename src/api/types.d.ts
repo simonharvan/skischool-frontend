@@ -26,3 +26,25 @@ export interface ILesson {
   instructor?: IInstructor
   client?: IClient
 }
+
+export interface IAttendance {
+  id: number
+  from: string
+  to: string
+  instructor?: IInstructor
+}
+
+export interface IStats {
+  clients: number
+  duration: number
+  unpaid: number
+  paid: number
+  best_instructor: string
+  best_instructor_duration: number
+}
+
+export interface IInstructorsStats {
+  name: string
+  duration: number
+  total: number
+}

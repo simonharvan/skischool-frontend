@@ -1,5 +1,5 @@
 import { Action, getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import { getUserInfo, login, logout } from '@/api/users'
+import { getMe, login, logout } from '@/api/users'
 import { getToken, removeToken, setToken } from '@/utils/cookies'
 import router, { resetRouter } from '@/router'
 import { PermissionModule } from './permission'
@@ -61,7 +61,7 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const data: any = await getUserInfo({ /* Your params here */ })
+    const data: any = await getMe()
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }

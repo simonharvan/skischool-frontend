@@ -31,6 +31,7 @@ import { SettingsModule } from '@/store/modules/settings'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import RightPanel from '@/components/RightPanel/index.vue'
 import ResizeMixin from './mixin/resize'
+import { InstructorsModule } from '@/store/modules/instructor'
 
 @Component({
   name: 'Layout',
@@ -67,6 +68,10 @@ export default class extends mixins(ResizeMixin) {
 
   private handleClickOutside() {
     AppModule.CloseSideBar(false)
+  }
+
+  mounted() {
+    InstructorsModule.GetInstructors({ name: null, gender: null, teaching: null, date: null })
   }
 }
 </script>
