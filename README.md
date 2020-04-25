@@ -68,9 +68,22 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Browsers support
 
-Modern browsers and Internet Explorer 10+.
+Modern browsers and Internet Explorer 10+. (Taken from [vue-typescript-admin-template](http://armour.github.io/vue-typescript-admin-template), didn't test it myself)
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
 | --------- | --------- | --------- | --------- |
 | IE10, IE11, Edge| last 2 versions| last 2 versions| last 2 versions
 
+## Known issues
+
+- [ ] Need to change Date class to moment or similar (doesn't work in safari)
+- [ ] Fix typescript issues in lessons component (doesn't effect functionality)
+
+## Screenshots  
+![Gif](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/animation.gif)
+![Screenshot 1](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot1.png)
+![Screenshot 2](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot2.png)
+![Screenshot 3](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot3.png)
+
+## Model 
+![Model](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot4.png)
