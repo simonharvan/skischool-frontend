@@ -81,9 +81,11 @@ Modern browsers and Internet Explorer 10+. (Taken from [vue-typescript-admin-tem
 
 ## Screenshots  
 ![Gif](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/animation.gif)
+![Gif 2](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/animation2.gif)
+![Gif 3](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/animation3.gif)
 ![Screenshot 1](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot1.png)
 ![Screenshot 2](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot2.png)
 ![Screenshot 3](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot3.png)
 
 ## Model 
-![Model](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot4.png)
+![model](https://github.com/simonharvan/skischool-frontend/raw/master/docs/screenshot4.png)
