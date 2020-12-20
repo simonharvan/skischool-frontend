@@ -2,7 +2,7 @@ import {Action, getModule, Module, Mutation, VuexModule} from 'vuex-module-decor
 
 import store from '@/store'
 import {IInstructor} from "@/api/types";
-import {getInstructors} from "@/api/instructors";
+import {createInstructor, deleteInstructor, getInstructors, updateInstructor} from "@/api/instructors";
 
 
 export interface IInstructorsState {
@@ -27,6 +27,31 @@ class Instructors extends VuexModule implements IInstructorsState {
             this.context.commit('SET_INSTRUCTORS', result)
         }
         return result
+    }
+
+    @Action({rawError: true})
+    public async CreateInstructor(payload: { name: string, gender: string, teaching: string, email: string, phone: string, password: string }) {
+        const instructor = {instructor: payload}
+        const data: any = await createInstructor(instructor)
+        const result: IInstructor = data.instructor
+
+        return result
+    }
+
+    @Action({rawError: true})
+    public async UpdateInstructor(payload: { id: number, name: string, gender: string, teaching: string, email: string, phone: string, password?: string }) {
+        const instructor = {instructor: payload}
+        const data: any = await updateInstructor(payload.id, instructor)
+        const result: IInstructor = data.instructor
+
+        return result
+    }
+
+    @Action({rawError: true})
+    public async DeleteInstructor(payload: { id: number }) {
+        const data: any = await deleteInstructor(payload.id)
+
+        return data
     }
 
 

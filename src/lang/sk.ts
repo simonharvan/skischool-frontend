@@ -3,6 +3,7 @@ export default {
     dashboard: 'Plocha',
     lessons: 'Hodiny',
     attendance: 'Dochádzka',
+    instructors: 'Inštruktori',
     documentation: 'Documentation',
     guide: 'Guide',
     permission: 'Permission',
@@ -173,7 +174,9 @@ export default {
   },
   messages: {
     successCreate: 'Úspešne vytvorené',
-    successUpdate: 'Úspešne aktualizované'
+    successUpdate: 'Úspešne aktualizované',
+    successDelete: 'Úspešne vymazané',
+    genericError: 'Nastala chyba, skúste znova alebo nás kontaktujte na admin@bero.tech'
   },
   lessons: {
     yesterday: 'Včera',
@@ -203,6 +206,20 @@ export default {
     weekdaysMin: 'ne_po_ut_st_št_pi_so'.split('_'),
     months: 'Január_Február_Marec_Apríl_Máj_Jún_Júl_August_September_Október_November_December'.split('_'),
     monthsShort: 'jan_feb_mar_apr_máj_jún_júl_aug_sep_okt_nov_dec'.split('_'),
+  },
+  instructor: {
+    title: 'Vytvorenie/Úprava inštruktora',
+    name: 'Meno',
+    gender: 'Pohlavie',
+    male: 'Muž',
+    female: 'Žena',
+    teaching: 'SKI/SNB',
+    ski: 'Lyže',
+    snb: 'Snowboard',
+    both: 'Oboje',
+    email: 'Email',
+    phone: 'Telefón',
+    password: 'Heslo',
   },
   dashboard: {
     newClients: 'Nových klient za posl. mesiac',

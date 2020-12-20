@@ -75,7 +75,6 @@ import { Message } from 'element-ui'
       name: 'Attendance',
       components: {}
     })
-
 export default class extends Vue {
         private attendance: IAttendance[] = []
         private selected: IInstructor[] = []

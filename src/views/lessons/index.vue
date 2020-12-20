@@ -35,7 +35,9 @@
             <el-button
                     type="success"
                     icon="el-icon-plus"
-                    @click.native="handleNewLesson"/>
+                    @click.native="handleNewLesson">
+                Nová hodina
+            </el-button>
 
         </el-row>
         <gantt-scheduler
@@ -265,6 +267,7 @@
             const selected: string[] = this.state.get('config.plugin.selection').selected['chart-timeline-grid-row-blocks']
 
             const date = new Date()
+            date.setHours(date.getHours() + 1)
             if (date.getMinutes() <= 15) {
                 date.setMinutes(0)
             } else if (date.getMinutes() > 15 && date.getMinutes() < 45) {
@@ -290,8 +293,8 @@
                 from = formatDateTimeToBackendWithOffset(fromDate)
                 to = formatDateTimeToBackendWithOffset(toDate)
                 rowId = Number.parseInt(selected[0].substr(0, selected[0].indexOf(':')))
-
             }
+
             this.editLesson = {
                 id: -1,
                 name: '',

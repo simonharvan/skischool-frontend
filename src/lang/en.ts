@@ -3,6 +3,7 @@ export default {
     dashboard: 'Dashboard',
     lessons: 'Lessons',
     attendance: 'Attendance',
+    instructors: 'Instructors',
     documentation: 'Documentation',
     guide: 'Guide',
     permission: 'Permission',

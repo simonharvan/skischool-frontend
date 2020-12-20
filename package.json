@@ -1,10 +1,10 @@
 {
-  "name": "vue-typescript-admin-template",
+  "name": "ski_school_backoffice",
   "version": "1.0.0",
   "private": true,
-  "author": "Chong Guo <armourcy@gmail.com>",
+  "author": "Simon Harvan <harvan.simon@gmail.com>",
   "scripts": {
-    "serve": "concurrently \"npm:mock\" \"vue-cli-service serve\"",
+    "serve": "vue-cli-service serve",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
     "lint": "vue-cli-service lint",

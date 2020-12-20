@@ -118,6 +118,23 @@ export const constantRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/instructors',
+    component: Layout,
+    redirect: '/instructors',
+    children: [
+      {
+        path: '/instructors',
+        component: () => import(/* webpackChunkName: "attendance" */ '@/views/instructors/index.vue'),
+        name: 'Instructors',
+        meta: {
+          title: 'instructors',
+          icon: 'people',
+          affix: true
+        }
+      }
+    ]
+  },
+  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
