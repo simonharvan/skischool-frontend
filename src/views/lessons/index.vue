@@ -68,9 +68,10 @@
     import {Message} from 'element-ui'
     import {ItemClickActionClass, setListener} from '@/views/lessons/helpers/ItemClickActionClass'
     import {plugins} from '@/views/lessons/helpers/Plugins'
+    //@ts-ignore
     import LessonEdit from '@/components/LessonEdit/index'
+    //@ts-ignore
     import LessonPay from '@/components/LessonPay/index'
-    import DeepState from 'node_modules/deep-state-observer/index'
     import {AppModule} from "@/store/modules/app";
 
     @Component({
@@ -85,7 +86,7 @@
     export default class extends Vue {
         private currentRole = 'admin-dashboard'
         private subs: any[] = []
-        private state: DeepState | undefined;
+        private state: any | undefined;
 
         private lessons: ILesson[] = [];
         private instructors: IInstructor[] = [];
@@ -96,7 +97,7 @@
 
         private payLesson: ILesson | null = null
 
-        private handleOnState(state: DeepState) {
+        private handleOnState(state: any) {
             this.state = state
             console.log('handleOnState()', state)
             this.subs.push(

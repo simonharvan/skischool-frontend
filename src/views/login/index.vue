@@ -12,6 +12,10 @@
         <h3 class="title">
           {{ $t('login.title') }}
         </h3>
+        <img
+          :src="require('@/assets/images/logo.png')"
+          class="sidebar-logo"
+        >
         <lang-select class="set-language" />
       </div>
 
@@ -105,8 +109,8 @@ export default class extends Vue {
   }
 
   private loginForm = {
-    email: 'simon@bero.tech',
-    password: 'password'
+    email: '',
+    password: ''
   }
   private loginRules = {
     email: [{ validator: this.validateEmail, trigger: 'blur' }],
