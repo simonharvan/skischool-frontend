@@ -1,3 +1,4 @@
+// @ts-ignore
 import { ECharts } from 'echarts'
 import { Component, Vue } from 'vue-property-decorator'
 

@@ -76,6 +76,8 @@
     import LessonPay from '@/components/LessonPay/index'
     import {AppModule} from "@/store/modules/app";
 
+    import _ from 'lodash'
+
     @Component({
         name: 'Lessons',
         components: {
@@ -92,29 +94,22 @@
 
         private lessons: ILesson[] = [];
         private instructors: IInstructor[] = [];
-        private itemTimeout: NodeJS.Timeout | undefined
 
         private editLesson: ILesson = {} as ILesson
         private changeValue: boolean = false
 
         private payLesson: ILesson | null = null
 
+        private timeoutID: any
+        private updatedJustNow: boolean = false;
+
         private handleOnState(state: any) {
             this.state = state
             console.log('handleOnState()', state)
             this.subs.push(
-                state.subscribe('config.chart.items.:id',
-                    (value: any, eventInfo: any) => {
-                        if (this.itemTimeout) {
-                            clearTimeout(this.itemTimeout)
-                        }
-                        this.itemTimeout = setTimeout(() => {
-                            this.updateLesson(value, eventInfo)
-                        }, 500)
-                    }
-                )
+                state.subscribe('config.chart.items.:id', _.debounce(this.handleGanttEvent, 300))
             )
-            setListener(this.handleClickLesson)
+            setListener(_.debounce(this.handleGanttEvent, 600))
         }
 
         get language() {
@@ -327,10 +322,26 @@
             }
         }
 
-        private handleClickLesson(data: any, event: Event) {
-            console.log('Click lesson', data)
-            this.editLesson = data.item.data
-            this.changeValue = !this.changeValue
+        private handleGanttEvent(data: any, event: any, update: boolean = true) {
+            console.log('Handle gantt event', data.item, event, update)
+            if (update && !event.path.update.endsWith('items')) {
+                this.updateLesson(data, event)
+                this.updatedJustNow = true
+                setTimeout(() => {
+                    this.updatedJustNow = false
+                }, 500)
+            } else if (!update && data.item !== null && !this.updatedJustNow) {
+                console.log('Update')
+                this.editLesson = data.item.data
+                this.changeValue = !this.changeValue
+            }
+            // else if (event.path.update.endsWith('items')) {
+            //     console.log('New lesson')
+            //     setTimeout(() => {
+            //         console.log('New lesson ins')
+            //         this.handleNewLesson()
+            //     }, 300)
+            // }
         }
 
         private handleSaved() {
@@ -438,6 +449,7 @@
 
         .controls {
             margin-bottom: 20px;
+
             & > * {
                 margin-right: 10px;
             }

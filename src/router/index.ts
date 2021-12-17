@@ -135,6 +135,23 @@ export const constantRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/clients',
+    component: Layout,
+    redirect: '/clients',
+    children: [
+      {
+        path: '/clients',
+        component: () => import(/* webpackChunkName: "attendance" */ '@/views/clients/index.vue'),
+        name: 'Clients',
+        meta: {
+          title: 'clients',
+          icon: 'shopping',
+          affix: true
+        }
+      }
+    ]
+  },
+  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
@@ -159,9 +176,8 @@ export const constantRoutes: RouteConfig[] = [
  * the routes that need to be dynamically loaded based on user roles
 */
 export const asyncRoutes: RouteConfig[] = [
-
   {
-    path: '',
+    path: '*',
     redirect: '/404',
     meta: { hidden: true }
   }

@@ -265,7 +265,7 @@ export default class extends Vue {
         }
 
         set startTime(value: string) {
-          console.log(this.lesson)
+          console.log("START TIME", this.lesson.from, value)
           const date = new Date(this.lesson.from)
           date.setHours(Number.parseInt(value.substr(0, 2)))
           date.setMinutes(Number.parseInt(value.substr(3, 2)))
@@ -274,6 +274,7 @@ export default class extends Vue {
         }
 
         set endTime(value: string) {
+          console.log("END TIME", this.lesson.to, value)
           const date = new Date(this.lesson.to)
           date.setHours(Number.parseInt(value.substr(0, 2)))
           date.setMinutes(Number.parseInt(value.substr(3, 2)))
@@ -332,8 +333,8 @@ export default class extends Vue {
 
         private handleSearchClients(query: string) {
           this.loadingClients = true
-          ClientsModule.GetClients({ name: query }).then((value: IClient[]) => {
-            this.clients = value
+          ClientsModule.GetClients({ name: query, limit: 25, offset: null }).then((result: { total: number, clients: IClient[] }) => {
+            this.clients = result.clients
             this.loadingClients = false
           })
         }

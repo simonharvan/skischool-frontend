@@ -222,4 +222,5 @@ export default {
   delete: 'Delete',
   cancel: 'Cancel',
   confirm: 'Confirm',
+  generate: 'Generate'
 }

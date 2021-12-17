@@ -24,7 +24,7 @@ export class ItemClickActionClass {
 
     onClick(event: Event) {
         if (listener) {
-            listener(this.data, event)
+            listener(this.data, event, false)
         }
     }
 

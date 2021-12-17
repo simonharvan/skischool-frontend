@@ -27,6 +27,7 @@
         prop="phone"
         label="Telefon"
         width="200"
+        :formatter="formatPhone"
       />
       <el-table-column
         prop="gender"
@@ -161,6 +162,13 @@ export default class extends Vue {
       return true
     }
     return row.teaching === value
+  }
+
+  formatPhone(row: any, _column: any) {
+    return row.phone.substr(0, 4) + " " +
+      row.phone.substr(4, 3) + " " +
+      row.phone.substr(7, 3) + " " +
+      row.phone.substr(10, 3)
   }
 
   handleNewInstructor() {

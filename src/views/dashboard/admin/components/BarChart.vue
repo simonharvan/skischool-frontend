@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts">
+// @ts-ignore
 import echarts, { EChartOption } from 'echarts'
 import { Component, Prop } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'

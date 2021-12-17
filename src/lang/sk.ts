@@ -4,6 +4,7 @@ export default {
     lessons: 'Hodiny',
     attendance: 'Dochádzka',
     instructors: 'Inštruktori',
+    clients: 'Klienti',
     documentation: 'Documentation',
     guide: 'Guide',
     permission: 'Permission',
@@ -222,17 +223,21 @@ export default {
     password: 'Heslo',
   },
   dashboard: {
-    newClients: 'Nových klient za posl. mesiac',
-    duration: 'Hodín za posl. mesiac',
+    newClients: 'Nových klient/mesiac',
+    duration: 'Oduč. hodín/mesiac',
     unpaid: 'Ešte nezaplatené',
     paidThisMonth: 'Zaplatené za posl. mesiac',
     bestInstructor: 'Najlepší inštruktor',
     bestInstructorDuration: 'Odučené',
-    minutes: 'Odučených',
-    total: 'Hodnota odučených'
+    minutes: 'Odučených (min.)',
+    total: 'Hodnota odučených (€)'
+  },
+  clients: {
+    search: "Hľadať podľa mena"
   },
   save: 'Uložiť',
   delete: 'Vymazať',
   cancel: 'Zrušiť',
   confirm: 'Potvrdiť',
+  generate: 'Generovať'
 }

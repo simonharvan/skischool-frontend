@@ -26,6 +26,13 @@ class Lessons extends VuexModule implements ILessonsState {
     }
 
     @Action({rawError: true})
+    public async GetLessonsByClientId(payload: { client: number }) {
+        const data: any = await getLessons(payload)
+        const result: ILesson[] = data.lessons
+        return result
+    }
+
+    @Action({rawError: true})
     public async CreateLesson(payload: {
         from: string,
         to: string,
@@ -41,7 +48,7 @@ class Lessons extends VuexModule implements ILessonsState {
         }
         instructor_id: number
     }) {
-        console.log('UPDATING LESSON', payload)
+        console.log('CREATING LESSON', payload)
         const lesson = { lesson: payload }
         const data: any = await createLesson(lesson)
         const result: ILesson = data.lesson

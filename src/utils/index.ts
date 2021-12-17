@@ -50,7 +50,7 @@ export const formatJson = (filterKeys: any, jsonData: any) =>
     }))
 
 export const formatDateTimeToBackendWithOffset = (date: Date) => {
-    date.setHours(date.getHours() + 1)
+    date.setHours(date.getHours() - date.getTimezoneOffset() / 60)
     return formatDateTimeToBackend(date)
 }
 

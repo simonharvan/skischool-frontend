@@ -6,6 +6,7 @@
     :v-loading="loading"
     width="80%"
     @closed="handleClosed"
+    append-to-body
   >
     <el-table
       v-if="lessons"

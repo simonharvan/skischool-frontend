@@ -14,9 +14,12 @@ export interface IClientsState {
 class Clients extends VuexModule implements IClientsState {
 
     @Action({rawError: true})
-    public async GetClients(payload: { name: string | null }) {
+    public async GetClients(payload: { name: string | null, limit: number | null, offset: number | null }) {
         const data: any = await getClients(payload)
-        const result: IInstructor[] = data.clients
+        const result = {
+            total: data.clientsCount,
+            clients: data.clients
+        }
 
         return result
     }

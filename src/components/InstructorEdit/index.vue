@@ -96,7 +96,7 @@
       <el-row
         :gutter="20"
       >
-        <el-col :span="24">
+        <el-col :span="18">
           <el-input
             v-model="password"
             clearable
@@ -105,6 +105,11 @@
             minlength="6"
             :placeholder="$t('instructor.password')"
           />
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="generatePassword">
+            {{ $t('generate') }}
+          </el-button>
         </el-col>
         <el-col :span="24">
           <small>Heslo do aplikácie - Ak nechcete menit heslo, tak ho nezadavajte.</small>
@@ -178,6 +183,10 @@ export default class extends Vue {
         private handleClose(done: any) {
           this.password = ''
           done()
+        }
+
+        private generatePassword() {
+          this.password = Math.random().toString(36).substr(2, 8)
         }
 
         private handleSubmit() {
