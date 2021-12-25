@@ -2,8 +2,8 @@ import {Action, getModule, Module, Mutation, VuexModule} from 'vuex-module-decor
 
 import store from '@/store'
 import {IClient, IInstructor} from "@/api/types";
-import {getInstructors} from "@/api/instructors";
-import {getClients} from "@/api/clients";
+import {getInstructors, updateInstructor} from "@/api/instructors";
+import {getClients, updateClient} from "@/api/clients";
 
 
 export interface IClientsState {
@@ -23,6 +23,15 @@ class Clients extends VuexModule implements IClientsState {
 
         return result
     }
+
+  @Action({rawError: true})
+  public async UpdateClient(payload: { id: number, name: string, email?: string, phone?: string, phone_2?: string}) {
+    const client = {client: payload}
+    const data: any = await updateClient(payload.id, client)
+    const result: IClient = data.client
+
+    return result
+  }
 
 }
 

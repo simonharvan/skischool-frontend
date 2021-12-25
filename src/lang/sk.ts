@@ -223,6 +223,9 @@ export default {
     phone: 'Telefón',
     password: 'Heslo',
   },
+  client: {
+    title: "Client"
+  },
   dashboard: {
     newClients: 'Nových klient/mesiac',
     duration: 'Oduč. hodín/mesiac',
