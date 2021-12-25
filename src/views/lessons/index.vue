@@ -191,10 +191,15 @@
             if (this.lessons.length > 0) {
                 this.lessons.forEach((lesson: ILesson) => {
                     if (lesson.instructor && lesson.client) {
+                        let name = lesson.name
+                        if (lesson.client.phone) {
+                          name += ' (' + lesson.client.phone + ')'
+                        }
+
                         result.chart.items[lesson.id] = {
                             id: lesson.id,
                             rowId: lesson.instructor.id,
-                            label: lesson.name + ' (' + lesson.client.phone + ')',
+                            label: name,
                             data: lesson,
                             time: {
                                 start: new Date(lesson.from).getTime(),
@@ -427,6 +432,7 @@
                 price: lesson.price,
                 name: lesson.name,
                 type: lesson.type,
+                note: lesson.note,
                 instructor_id: value.rowId
             }
 

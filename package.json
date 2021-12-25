@@ -114,8 +114,7 @@
   "bugs": {
     "url": "https://github.com/armour/vue-typescript-admin-template/issues"
   },
-  "gitHooks": {
-  },
+  "gitHooks": {},
   "keywords": [
     "vue",
     "typescript",

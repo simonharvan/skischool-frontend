@@ -10,8 +10,8 @@ export interface IInstructor {
 export interface IClient {
   id: number
   name: string
-  email: string
-  phone: string
+  email?: string
+  phone?: string
   phone_2?: string
 }
 
@@ -23,6 +23,7 @@ export interface ILesson {
   type: string
   price: number
   status: string
+  note: string
   instructor?: IInstructor
   client?: IClient
 }

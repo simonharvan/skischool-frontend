@@ -24,7 +24,6 @@ class Clients extends VuexModule implements IClientsState {
         return result
     }
 
-
 }
 
 export const ClientsModule = getModule(Clients)

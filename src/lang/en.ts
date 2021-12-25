@@ -199,6 +199,7 @@ export default {
     email: 'Email',
     phone: 'Phone',
     phone2: 'Phone 2',
+    note: 'Note',
     pay: 'Pay',
     areYouSure: 'Are you sure to delete this?',
     totalPrice: 'Total price',

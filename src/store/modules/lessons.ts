@@ -56,7 +56,7 @@ class Lessons extends VuexModule implements ILessonsState {
     }
 
     @Action({rawError: true})
-    public async UpdateLesson(payload: { id: number, from: string, to: string, price: number, name: string, type: string, instructor_id: number }) {
+    public async UpdateLesson(payload: { id: number, from: string, to: string, price: number, name: string, type: string, note: string, instructor_id: number }) {
         console.log('UPDATING LESSON', payload)
         const lesson = { lesson: payload }
         const data: any = await updateLesson(payload.id, lesson)

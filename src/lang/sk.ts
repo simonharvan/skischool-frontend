@@ -199,6 +199,7 @@ export default {
     email: 'Email',
     phone: 'Telefón',
     phone2: 'Telefón 2',
+    note: 'Poznámka',
     pay: 'Zaplatiť',
     totalPrice: 'Cena celkovo',
     areYouSure: 'Si si istý, že chceš vymazať?',

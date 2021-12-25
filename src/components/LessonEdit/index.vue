@@ -75,7 +75,6 @@
           />
         </el-col>
       </el-row>
-
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item :label="$t('lessons.instructor')">
@@ -159,6 +158,17 @@
             clearable
             :placeholder="$t('lessons.phone2')"
           />
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24">
+          <el-form-item :label="$t('lessons.note')">
+            <el-input
+              v-model="lesson.note"
+              type="textarea"
+              :placeholder="$t('lessons.note')"
+            />
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row
@@ -373,6 +383,7 @@ export default class extends Vue {
             to: this.lesson.to,
             price: this.lesson.price,
             type: this.lesson.type,
+            note: this.lesson.note,
             instructor_id: this.instructor.id
           }
           if (this.lesson.name !== '') {
