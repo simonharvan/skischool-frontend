@@ -125,6 +125,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import CountTo from 'vue-count-to'
 import { DashboardModule } from '@/store/modules/dashboard'
 import { IStats } from '@/api/types'
+import {formatTimeInMinToNiceTime} from "@/utils";
 
     @Component({
       name: 'PanelGroup',
@@ -136,21 +137,11 @@ export default class extends Vue {
         private stats = {} as IStats
 
         get duration() {
-          const hours = Math.floor(this.stats.duration / 60)
-
-          let minutes: string | number = Math.floor(this.stats.duration % 60)
-          minutes = minutes < 10 ? '0' + minutes : minutes
-
-          return hours + ':' + minutes
+          return formatTimeInMinToNiceTime(this.stats.duration)
         }
 
         get bestInstructorDurations() {
-          const hours = Math.floor(this.stats.best_instructor_duration / 60)
-
-          let minutes: string | number = Math.floor(this.stats.best_instructor_duration % 60)
-          minutes = minutes < 10 ? '0' + minutes : minutes
-
-          return hours + ':' + minutes
+          return formatTimeInMinToNiceTime(this.stats.best_instructor_duration)
         }
 
         private handleSetLineChartData(type: string) {

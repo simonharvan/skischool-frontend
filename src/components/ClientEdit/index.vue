@@ -124,19 +124,10 @@ export default class extends Vue {
         private handleSubmit() {
           this.loading = true
           let payload: any = {
-            name: this.client.name
-          }
-
-          if (this.client.email) {
-            payload.email = this.client.email
-          }
-
-          if (this.client.phone) {
-            payload.phone = this.client.phone
-          }
-
-          if (this.client.phone_2) {
-            payload.phone_2 = this.client.phone_2
+            name: this.client.name,
+            email: this.client.email,
+            phone: this.client.phone,
+            phone_2: this.client.phone_2
           }
 
           if (this.client.id >= 0) {

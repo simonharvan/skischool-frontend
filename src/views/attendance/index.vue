@@ -39,7 +39,7 @@
       <el-table-column
         property="instructor"
         label="Instructor"
-        width="140"
+        width="250"
         :formatter="instructorFormatter"
       />
       <el-table-column
