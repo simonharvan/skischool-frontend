@@ -22,7 +22,7 @@ const settings: ISettings = {
   sidebarTextTheme: true,
   devServerPort: 9527,
   mockServerPort: 9528,
-  pricePerHour: 20
+  pricePerHour: 25
 }
 
 export default settings
