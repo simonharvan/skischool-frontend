@@ -148,7 +148,7 @@ export default class extends Vue {
 
   get config() {
     let result: any = {
-      height: 500,
+      height: 650,
       utcMode: false,
       plugins: plugins,
       list: {
@@ -245,16 +245,14 @@ export default class extends Vue {
   }
 
   private handleYesterday() {
-    const date = new Date()
+    const date = new Date(this.selectedDate)
     date.setDate(this.selectedDate.getDate() - 1)
-    console.log('Yesterdat', date)
     LessonsModule.SetSelectedDate(date)
   }
 
   private handleTommorow() {
-    const date = new Date()
+    const date = new Date(this.selectedDate)
     date.setDate(this.selectedDate.getDate() + 1)
-    console.log('Tommorow', date)
     LessonsModule.SetSelectedDate(date)
   }
 
