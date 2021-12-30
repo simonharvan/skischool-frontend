@@ -258,7 +258,6 @@ export default class extends Vue {
 
   private handleToday() {
     const date = new Date()
-    console.log('Today', date)
     LessonsModule.SetSelectedDate(date)
   }
 

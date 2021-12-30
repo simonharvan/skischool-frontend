@@ -112,22 +112,19 @@ export default class extends Vue {
         }
 
         private handleYesterday() {
-          const date = new Date()
+          const date = new Date(this.selectedDate)
           date.setDate(this.selectedDate.getDate() - 1)
-          console.log('Yesterdat', date)
           AttendanceModule.SetSelectedDate(date)
         }
 
         private handleTommorow() {
-          const date = new Date()
+          const date = new Date(this.selectedDate)
           date.setDate(this.selectedDate.getDate() + 1)
-          console.log('Tommorow', date)
           AttendanceModule.SetSelectedDate(date)
         }
 
         private handleToday() {
           const date = new Date()
-          console.log('Today', date)
           AttendanceModule.SetSelectedDate(date)
         }
 
@@ -136,7 +133,6 @@ export default class extends Vue {
         }
 
         private handleSelectionChange(selected: IInstructor[]) {
-          console.log('attendance', selected)
           this.selected = selected
         }
 
