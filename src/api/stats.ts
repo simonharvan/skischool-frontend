@@ -1,16 +1,17 @@
 import request from '@/utils/request'
 
-export const getStats = () =>
+export const getStats = (params: any) =>
   request({
     url: '/stats',
     method: 'get',
-
+    params
   })
 
-export const getInstructorsStats = () =>
-    request({
-        url: '/instructors-stats',
-        method: 'get',
-    })
+export const getInstructorsStats = (params: any) =>
+  request({
+    url: '/instructors-stats',
+    method: 'get',
+    params
+  })
 
 

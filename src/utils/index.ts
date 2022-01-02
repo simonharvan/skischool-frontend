@@ -83,7 +83,6 @@ export const formatTimeInMinToNiceTime = (time: number) => {
   return hours + ':' + minutes
 }
 
-
 export const generateId = (length: number, prefix: string = '') => {
     var result = prefix + '_'
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'

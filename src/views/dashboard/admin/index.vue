@@ -1,6 +1,26 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <el-row :gutter="8">
+      <el-col :span="12">
+        <el-date-picker
+          v-model="dates"
+          type="daterange"
+          start-placeholder="Od"
+          end-placeholder="Do"
+          format="dd.MM.yyyy"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-col>
+    </el-row>
+    <panel-group />
+    <el-row :gutter="8">
+      <el-col :span="24">
+        <el-image src="https://www.yr.no/en/content/2-12057247/meteogram.svg" alt="yr.no forecast oscadnica"/>
+      </el-col>
+      <el-col :span="12">
+        <el-image src="https://www.yr.no/en/content/2-12212485/meteogram.svg" alt="yr.no forecast velka raca"/>
+      </el-col>
+    </el-row>
     <el-row :gutter="8">
       <el-col
         :xs="{span: 24}"
@@ -10,7 +30,7 @@
         :xl="{span: 24}"
         style="padding-right:8px;margin-bottom:30px;"
       >
-        <bar-chart />
+        <bar-chart/>
       </el-col>
     </el-row>
   </div>
@@ -18,9 +38,11 @@
 
 <script lang="ts">
 import 'echarts/theme/macarons.js' // Theme used in BarChart, LineChart, PieChart and RadarChart
-import { Component, Vue } from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import PanelGroup from './components/PanelGroup.vue'
 import BarChart from './components/BarChart.vue'
+import {values} from "lodash";
+import {DashboardModule} from "@/store/modules/dashboard";
 
 @Component({
   name: 'DashboardAdmin',
@@ -31,32 +53,69 @@ import BarChart from './components/BarChart.vue'
 })
 export default class extends Vue {
 
+  private pickerOptions = {
+    shortcuts: [{
+      text: 'Posledny týždeň',
+      onClick(picker: any) {
+        const end = new Date();
+        const start = new Date();
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+        picker.$emit('pick', [start, end]);
+      }
+    }, {
+      text: 'Posledný mesiac',
+      onClick(picker: any) {
+        const end = new Date();
+        const start = new Date();
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+        picker.$emit('pick', [start, end]);
+      }
+    }, {
+      text: 'Posledné 3 mesiace',
+      onClick(picker: any) {
+        const end = new Date();
+        const start = new Date();
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+        picker.$emit('pick', [start, end]);
+      }
+    }]
+  }
+
+  get dates() {
+    return DashboardModule.dates
+  }
+
+  set dates(dates: any) {
+    DashboardModule.SetDates(dates)
+  }
+
+
 }
 </script>
 
 <style lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 32px;
-    background-color: rgb(240, 242, 245);
-    position: relative;
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
 
-    .github-corner {
-      position: absolute;
-      top: 0px;
-      border: 0;
-      right: 0;
-    }
-
-    .chart-wrapper {
-      background: #fff;
-      padding: 16px 16px 0;
-      margin-bottom: 32px;
-    }
+  .github-corner {
+    position: absolute;
+    top: 0px;
+    border: 0;
+    right: 0;
   }
 
-  @media (max-width: 1024px) {
-    .chart-wrapper {
-      padding: 8px;
-    }
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
   }
+}
+
+@media (max-width: 1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
+}
 </style>

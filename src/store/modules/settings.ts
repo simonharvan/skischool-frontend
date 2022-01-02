@@ -10,6 +10,7 @@ export interface ISettingsState {
   showTagsView: boolean
   showSidebarLogo: boolean
   sidebarTextTheme: boolean
+  priceList: any,
   pricePerHour: number
 }
 
@@ -21,6 +22,7 @@ class Settings extends VuexModule implements ISettingsState {
   public showTagsView = defaultSettings.showTagsView
   public showSidebarLogo = defaultSettings.showSidebarLogo
   public sidebarTextTheme = defaultSettings.sidebarTextTheme
+  public priceList = defaultSettings.priceList
   public pricePerHour = defaultSettings.pricePerHour
 
   @Mutation
@@ -35,6 +37,8 @@ class Settings extends VuexModule implements ISettingsState {
   public ChangeSetting(payload: { key: string, value: any}) {
     this.CHANGE_SETTING(payload)
   }
+
+
 }
 
 export const SettingsModule = getModule(Settings)

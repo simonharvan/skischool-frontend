@@ -22,6 +22,7 @@ export interface ILesson {
   name: string
   type: string
   price: number
+  persons_count: number
   status: string
   note: string
   instructor?: IInstructor
@@ -48,4 +49,12 @@ export interface IInstructorsStats {
   name: string
   duration: number
   total: number
+  duration_by_persons: IDurationByPersons
+}
+
+export interface IDurationByPersons {
+  persons_1: number
+  persons_2: number
+  persons_3: number
+  persons_4: number
 }

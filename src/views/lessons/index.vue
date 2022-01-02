@@ -307,6 +307,7 @@ export default class extends Vue {
       price: 20,
       from: from,
       to: to,
+      persons_count: 1,
       instructor: {
         id: rowId
       }
@@ -438,6 +439,7 @@ export default class extends Vue {
       name: lesson.name,
       type: lesson.type,
       note: lesson.note,
+      persons_count: lesson.persons_count,
       instructor_id: value.rowId
     }
 

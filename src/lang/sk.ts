@@ -234,6 +234,10 @@ export default {
     bestInstructor: 'Najlepší inštruktor',
     bestInstructorDuration: 'Odučené',
     minutes: 'Odučených (min.)',
+    persons_1: '1 osoba',
+    persons_2: '2 osoby',
+    persons_3: '3 osoby',
+    persons_4: '4+ osoby',
     total: 'Hodnota odučených (€)'
   },
   clients: {

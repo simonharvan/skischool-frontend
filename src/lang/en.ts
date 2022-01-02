@@ -220,6 +220,10 @@ export default {
     bestInstructor: 'Best instructor',
     bestInstructorDuration: 'Hours',
     minutes: 'Minutes',
+    persons_1: '1 Person',
+    persons_2: '2 Person',
+    persons_3: '3 Person',
+    persons_4: '4+ Person',
     total: 'Total earned'
   },
   save: 'Save',

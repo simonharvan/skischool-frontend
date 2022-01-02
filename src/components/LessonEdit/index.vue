@@ -21,7 +21,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="8">
           <el-select
             ref="type"
             v-model="lesson.type"
@@ -42,9 +42,17 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-input-number
             v-model="lesson.price"
+          />
+        </el-col>
+        <el-col :span="8">
+          <el-input-number
+            v-model="lesson.persons_count"
+            :min="1"
+            :max="4"
+            @change="handlePersonChange"
           />
         </el-col>
       </el-row>
@@ -225,9 +233,11 @@
             :disabled="lesson.status === 'paid'"
             @click="handleSubmit"
           >
-            {{ loading ?
-              $t('lessons.submitting')
-              : $t('lessons.submit') }}
+            {{
+              loading ?
+                $t('lessons.submitting')
+                : $t('lessons.submit')
+            }}
           </el-button>
         </el-col>
       </el-row>
@@ -236,265 +246,274 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { IClient, IInstructor, ILesson } from '@/api/types'
-import { formatDateTimeToBackendWithOffset, formatTimeToBackend } from '@/utils'
-import { InstructorsModule } from '@/store/modules/instructor'
-import { ClientsModule } from '@/store/modules/clients'
-import { LessonsModule } from '@/store/modules/lessons'
-import { Message } from 'element-ui'
-import { SettingsModule } from '@/store/modules/settings'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {IClient, IInstructor, ILesson} from '@/api/types'
+import {formatDateTimeToBackendWithOffset, formatTimeToBackend} from '@/utils'
+import {InstructorsModule} from '@/store/modules/instructor'
+import {ClientsModule} from '@/store/modules/clients'
+import {LessonsModule} from '@/store/modules/lessons'
+import {Message} from 'element-ui'
+import {SettingsModule} from '@/store/modules/settings'
+import {durationToPrice} from "@/utils/price-list";
 
-    @Component({
-      name: 'LessonEdit'
-    })
+@Component({
+  name: 'LessonEdit'
+})
 export default class extends Vue {
-        @Prop({ default: Object }) private lesson!: ILesson
-        @Prop({ default: Boolean }) private changeValue!: boolean
+  @Prop({default: Object}) private lesson!: ILesson
+  @Prop({default: Boolean}) private changeValue!: boolean
 
-        private drawer = false
-        private loading = false
-        private loadingClients = false
-        private instructor = {} as IInstructor
-        private clients: IClient[] = []
-        private client = {} as IClient
+  private drawer = false
+  private loading = false
+  private loadingClients = false
+  private instructor = {} as IInstructor
+  private clients: IClient[] = []
+  private client = {} as IClient
 
-        private visibleMore = false
+  private visibleMore = false
 
-        get instructors() {
-          return InstructorsModule.instructors
-        }
+  get instructors() {
+    return InstructorsModule.instructors
+  }
 
-        get startTime() {
-          console.log(this.lesson)
-          return formatTimeToBackend(new Date(this.lesson.from))
-        }
+  get startTime() {
+    console.log(this.lesson)
+    return formatTimeToBackend(new Date(this.lesson.from))
+  }
 
-        get endTime() {
-          return formatTimeToBackend(new Date(this.lesson.to))
-        }
+  get endTime() {
+    return formatTimeToBackend(new Date(this.lesson.to))
+  }
 
-        set startTime(value: string) {
-          console.log("START TIME", this.lesson.from, value)
-          const date = new Date(this.lesson.from)
-          date.setHours(Number.parseInt(value.substr(0, 2)))
-          date.setMinutes(Number.parseInt(value.substr(3, 2)))
-          date.setSeconds(0)
-          this.lesson.from = formatDateTimeToBackendWithOffset(date)
-        }
+  set startTime(value: string) {
+    const date = new Date(this.lesson.from)
+    date.setHours(Number.parseInt(value.substr(0, 2)))
+    date.setMinutes(Number.parseInt(value.substr(3, 2)))
+    date.setSeconds(0)
+    this.lesson.from = formatDateTimeToBackendWithOffset(date)
+  }
 
-        set endTime(value: string) {
-          console.log("END TIME", this.lesson.to, value)
-          const date = new Date(this.lesson.to)
-          date.setHours(Number.parseInt(value.substr(0, 2)))
-          date.setMinutes(Number.parseInt(value.substr(3, 2)))
-          date.setSeconds(0)
-          this.lesson.to = formatDateTimeToBackendWithOffset(date)
-        }
+  set endTime(value: string) {
+    const date = new Date(this.lesson.to)
+    date.setHours(Number.parseInt(value.substr(0, 2)))
+    date.setMinutes(Number.parseInt(value.substr(3, 2)))
+    date.setSeconds(0)
+    this.lesson.to = formatDateTimeToBackendWithOffset(date)
+  }
 
-        get pricePerHour() {
-          return SettingsModule.pricePerHour
-        }
+  private onLessonChange(lesson: ILesson) {
+    this.drawer = true
 
-        private onLessonChange(lesson: ILesson) {
-          this.drawer = true
+    let some = this.instructors.find((instructor: IInstructor) => {
+      if (lesson.instructor && instructor.id === lesson.instructor.id) {
+        return instructor
+      }
+    })
+    if (some) {
+      this.instructor = some
+    }
 
-          let some = this.instructors.find((instructor: IInstructor) => {
-            if (lesson.instructor && instructor.id === lesson.instructor.id) {
-              return instructor
-            }
-          })
-          if (some) {
-            this.instructor = some
-          }
+    if (lesson.client) {
+      this.client = lesson.client
+      this.pushIfNotIn(lesson.client)
+      this.visibleMore = true
+    }
 
-          if (lesson.client) {
-            this.client = lesson.client
-            this.pushIfNotIn(lesson.client)
-            this.visibleMore = true
-          }
+    if (lesson.id < 0) {
+      this.handleTimeChange()
+    }
+  }
 
-          if (lesson.id < 0) {
-            this.handleTimeChange()
-          }
-        }
+  private pushIfNotIn(client: IClient) {
+    if (!this.clients.some((value) => value.id === client.id)) {
+      this.clients.push(client)
+    }
+  }
 
-        private pushIfNotIn(client: IClient) {
-          if (!this.clients.some((value) => value.id === client.id)) {
-            this.clients.push(client)
-          }
-        }
+  @Watch('changeValue')
+  private onChangeValue() {
+    this.onLessonChange(this.lesson)
+  }
 
-        @Watch('changeValue')
-        private onChangeValue() {
-          this.onLessonChange(this.lesson)
-        }
+  mounted() {
 
-        mounted() {
+  }
 
-        }
+  private handleTimeChange() {
+    const from = new Date(this.lesson.from).getTime()
+    const to = new Date(this.lesson.to).getTime()
+    const duration = Math.abs(to - from) / 36e5
+    const personsCount = this.lesson.persons_count
+    this.lesson.price = durationToPrice(duration, personsCount)
+  }
 
-        private handleTimeChange() {
-          const from = new Date(this.lesson.from).getTime()
-          const to = new Date(this.lesson.to).getTime()
-          const duration = Math.abs(to - from) / 36e5
-          this.lesson.price = Math.round(duration * this.pricePerHour * 100) / 100
-        }
+  private handlePersonChange() {
+    const from = new Date(this.lesson.from).getTime()
+    const to = new Date(this.lesson.to).getTime()
+    const duration = Math.abs(to - from) / 36e5
+    const personsCount = this.lesson.persons_count
+    this.lesson.price = durationToPrice(duration, personsCount)
+  }
 
-        private handleSearchClients(query: string) {
-          this.loadingClients = true
-          ClientsModule.GetClients({ name: query, limit: 25, offset: null }).then((result: { total: number, clients: IClient[] }) => {
-            this.clients = result.clients
-            this.loadingClients = false
-          })
-        }
+  private handleSearchClients(query: string) {
+    this.loadingClients = true
+    ClientsModule.GetClients({
+      name: query,
+      limit: 25,
+      offset: null
+    }).then((result: { total: number, clients: IClient[] }) => {
+      this.clients = result.clients
+      this.loadingClients = false
+    })
+  }
 
-        private handleChangedClient(value: any) {
-          let some = this.clients.find((client) => client.id === value)
-          if (some) {
-            this.client = some
-          } else {
-            this.client.name = value
-          }
-          this.visibleMore = true
-        }
+  private handleChangedClient(value: any) {
+    let some = this.clients.find((client) => client.id === value)
+    if (some) {
+      this.client = some
+    } else {
+      this.client.name = value
+    }
+    this.visibleMore = true
+  }
 
-        private closeForm() {
-          (this.$refs.lessonDrawer as any).closeDrawer()
-        }
+  private closeForm() {
+    (this.$refs.lessonDrawer as any).closeDrawer()
+  }
 
-        private handleClose(done: any) {
-          this.client = {} as IClient
-          this.instructor = {} as IInstructor
-          this.visibleMore = false
-          done()
-        }
+  private handleClose(done: any) {
+    this.client = {} as IClient
+    this.instructor = {} as IInstructor
+    this.visibleMore = false
+    done()
+  }
 
-        private handlePay() {
-          console.log('Lesson handle pay', this.lesson)
-          this.$emit('pay', this.lesson)
-          this.closeForm()
-        }
+  private handlePay() {
+    console.log('Lesson handle pay', this.lesson)
+    this.$emit('pay', this.lesson)
+    this.closeForm()
+  }
 
-        private handleSubmit() {
-          this.loading = true
-          let payload: any = {
-            from: this.lesson.from,
-            to: this.lesson.to,
-            price: this.lesson.price,
-            type: this.lesson.type,
-            note: this.lesson.note,
-            instructor_id: this.instructor.id
-          }
-          if (this.lesson.name !== '') {
-            payload.name = this.lesson.name
-          }
+  private handleSubmit() {
+    this.loading = true
+    let payload: any = {
+      from: this.lesson.from,
+      to: this.lesson.to,
+      price: this.lesson.price,
+      type: this.lesson.type,
+      note: this.lesson.note,
+      persons_count: this.lesson.persons_count,
+      instructor_id: this.instructor.id
+    }
+    if (this.lesson.name !== '') {
+      payload.name = this.lesson.name
+    }
 
-          if (this.lesson.id >= 0) {
-            payload.id = this.lesson.id
-            LessonsModule.UpdateLesson(payload).then(() => {
-              this.loading = false
-              Message({
-                message: this.$t('messages.successUpdate').toString(),
-                type: 'success',
-                duration: 2 * 1000
-              })
-              this.$emit('saved')
-              this.closeForm()
-            }).catch(() => {
-              this.loading = false
-            })
+    if (this.lesson.id >= 0) {
+      payload.id = this.lesson.id
+      LessonsModule.UpdateLesson(payload).then(() => {
+        this.loading = false
+        Message({
+          message: this.$t('messages.successUpdate').toString(),
+          type: 'success',
+          duration: 2 * 1000
+        })
+        this.$emit('saved')
+        this.closeForm()
+      }).catch(() => {
+        this.loading = false
+      })
 
-            return
-          }
+      return
+    }
 
-          if (typeof this.client.id === 'number') {
-            payload.client = {} as any
-            payload.client.id = this.client.id
-          } else {
-            payload.client = {} as any
-            payload.client.name = this.client.name
-            payload.client.email = this.client.email
-            payload.client.phone = this.client.phone
-            payload.client.phone_2 = this.client.phone_2
-          }
+    if (typeof this.client.id === 'number') {
+      payload.client = {} as any
+      payload.client.id = this.client.id
+    } else {
+      payload.client = {} as any
+      payload.client.name = this.client.name
+      payload.client.email = this.client.email
+      payload.client.phone = this.client.phone
+      payload.client.phone_2 = this.client.phone_2
+    }
 
-          LessonsModule.CreateLesson(payload).then(() => {
-            this.loading = false
-            Message({
-              message: this.$t('messages.successCreate').toString(),
-              type: 'success',
-              duration: 2 * 1000
-            })
-            this.$emit('saved')
-            this.closeForm()
-          }).catch(() => {
-            this.loading = false
-          })
-        }
+    LessonsModule.CreateLesson(payload).then(() => {
+      this.loading = false
+      Message({
+        message: this.$t('messages.successCreate').toString(),
+        type: 'success',
+        duration: 2 * 1000
+      })
+      this.$emit('saved')
+      this.closeForm()
+    }).catch(() => {
+      this.loading = false
+    })
+  }
 
-        private handleDelete() {
-          LessonsModule.DeleteLesson({ id: this.lesson.id }).then(() => {
-            this.$emit('deleted', this.lesson.id)
-            this.closeForm()
-          })
-        }
+  private handleDelete() {
+    LessonsModule.DeleteLesson({id: this.lesson.id}).then(() => {
+      this.$emit('deleted', this.lesson.id)
+      this.closeForm()
+    })
+  }
 }
 </script>
 <style lang="scss">
 
 </style>
 <style lang="scss" scoped>
-    ::v-deep .el-drawer__body {
-        padding: 20px;
+::v-deep .el-drawer__body {
+  padding: 20px;
+}
+
+::v-deep .el-drawer__header > :first-child {
+  outline: 0;
+}
+
+::v-deep .el-form-item {
+  margin-bottom: 0;
+}
+
+.lesson-drawer {
+  .el-date-editor.el-input, .el-select, .el-input-number--medium {
+    width: 100%;
+  }
+
+  .el-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .pay-bottom {
+    position: fixed;
+    bottom: 60px;
+    width: calc(40% - 20px);
+
+    .el-button {
+      width: 100%;
     }
+  }
 
-    ::v-deep .el-drawer__header > :first-child {
-        outline: 0;
+  .bottom {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    width: calc(40% - 20px);
+    padding-bottom: 20px;
+
+    .el-col {
+      flex-grow: 1;
+
+      .el-button {
+        width: 100%;
+
+        &.el-button--medium {
+          padding: 10px;
+        }
+      }
     }
-
-    ::v-deep .el-form-item {
-        margin-bottom: 0;
-    }
-
-    .lesson-drawer {
-        .el-date-editor.el-input, .el-select, .el-input-number--medium {
-            width: 100%;
-        }
-
-        .el-row {
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-
-        .pay-bottom {
-            position: fixed;
-            bottom: 60px;
-            width: calc(40% - 20px);
-
-            .el-button {
-                width: 100%;
-            }
-        }
-
-        .bottom {
-            position: fixed;
-            bottom: 0;
-            display: flex;
-            width: calc(40% - 20px);
-            padding-bottom: 20px;
-
-            .el-col {
-                flex-grow: 1;
-
-                .el-button {
-                    width: 100%;
-
-                    &.el-button--medium {
-                        padding: 10px;
-                    }
-                }
-            }
-        }
-    }
+  }
+}
 </style>
