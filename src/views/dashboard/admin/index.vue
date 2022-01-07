@@ -12,15 +12,7 @@
         </el-date-picker>
       </el-col>
     </el-row>
-    <panel-group />
-    <el-row :gutter="8">
-      <el-col :span="24">
-        <el-image src="https://www.yr.no/en/content/2-12057247/meteogram.svg" alt="yr.no forecast oscadnica"/>
-      </el-col>
-      <el-col :span="12">
-        <el-image src="https://www.yr.no/en/content/2-12212485/meteogram.svg" alt="yr.no forecast velka raca"/>
-      </el-col>
-    </el-row>
+    <panel-group/>
     <el-row :gutter="8">
       <el-col
         :xs="{span: 24}"
@@ -31,6 +23,14 @@
         style="padding-right:8px;margin-bottom:30px;"
       >
         <bar-chart/>
+      </el-col>
+    </el-row>
+    <el-row :gutter="8">
+      <el-col :span="12">
+        <el-image src="https://www.yr.no/en/content/2-12057247/meteogram.svg" alt="yr.no forecast oscadnica"/>
+      </el-col>
+      <el-col :span="12">
+        <el-image src="https://www.yr.no/en/content/2-12212485/meteogram.svg" alt="yr.no forecast velka raca"/>
       </el-col>
     </el-row>
   </div>
@@ -55,7 +55,7 @@ export default class extends Vue {
 
   private pickerOptions = {
     shortcuts: [{
-      text: 'Posledny týždeň',
+      text: 'Posledný týždeň',
       onClick(picker: any) {
         const end = new Date();
         const start = new Date();
@@ -65,17 +65,26 @@ export default class extends Vue {
     }, {
       text: 'Posledný mesiac',
       onClick(picker: any) {
-        const end = new Date();
         const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+        start.setMonth(start.getMonth() - 1);
+        start.setDate(1)
+        start.setHours(0)
+        const end = new Date(start);
+        end.setMonth(end.getMonth() + 1)
+        end.setDate(end.getDate() - 1)
+        end.setHours(23)
         picker.$emit('pick', [start, end]);
       }
     }, {
-      text: 'Posledné 3 mesiace',
+      text: 'Tento mesiac',
       onClick(picker: any) {
-        const end = new Date();
         const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+        start.setDate(1)
+        start.setHours(0)
+        const end = new Date(start);
+        end.setMonth(end.getMonth() + 1)
+        end.setDate(end.getDate() - 1)
+        end.setHours(23)
         picker.$emit('pick', [start, end]);
       }
     }]

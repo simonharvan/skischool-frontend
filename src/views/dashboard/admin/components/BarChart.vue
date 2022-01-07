@@ -8,11 +8,11 @@
 <script lang="ts">
 // @ts-ignore
 import echarts, {EChartOption} from 'echarts'
-import {Component, Prop} from 'vue-property-decorator'
+import {Component, Prop, Watch} from 'vue-property-decorator'
 import {mixins} from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 import {DashboardModule} from '@/store/modules/dashboard'
-import {IInstructorsStats} from '@/api/types'
+import {IInstructorsStats, ILesson} from '@/api/types'
 
 const animationDuration = 6000
 
@@ -26,6 +26,11 @@ export default class extends mixins(ResizeMixin) {
 
   get instructorsStats() {
     return DashboardModule.instructorStats ? DashboardModule.instructorStats : []
+  }
+
+  @Watch('instructorsStats')
+  private onInstructorsStatsChange() {
+    this.setOptions()
   }
 
   mounted() {
@@ -42,6 +47,16 @@ export default class extends mixins(ResizeMixin) {
 
   private initChart() {
     this.chart = echarts.init(this.$el as HTMLDivElement, 'macarons')
+    this.setOptions()
+  }
+
+  private fetchData() {
+    DashboardModule.GetInstructorsStats().then(() => {
+      this.initChart()
+    })
+  }
+
+  private setOptions() {
     this.chart.setOption({
       tooltip: {
         trigger: 'axis',
@@ -69,56 +84,52 @@ export default class extends mixins(ResizeMixin) {
           show: false
         }
       }],
-      series: [{
-        name: this.$t('dashboard.minutes'),
-        type: 'bar',
-        stack: 'minutes',
-        // barWidth: '60%',
-        data: this.instructorsStats.map((stat) => stat.duration),
-        animationDuration
-      }, {
-        name: this.$t('dashboard.persons_1'),
-        type: 'bar',
-        stack: 'per_person',
-        // barWidth: '60%',
-        data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_1),
-        animationDuration
-      }, {
-        name: this.$t('dashboard.persons_2'),
-        type: 'bar',
-        stack: 'per_person',
-        // barWidth: '60%',
-        data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_2),
-        animationDuration
-      }, {
-        name: this.$t('dashboard.persons_3'),
-        type: 'bar',
-        stack: 'per_person',
-        // barWidth: '60%',
-        data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_3),
-        animationDuration
-      }, {
-        name: this.$t('dashboard.persons_4'),
-        type: 'bar',
-        stack: 'per_person',
-        // barWidth: '60%',
-        data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_4),
-        animationDuration
-      }, {
-        name: this.$t('dashboard.total'),
-        type: 'bar',
-        stack: 'price',
-        // barWidth: '60%',
-        data: this.instructorsStats.map((stat) => stat.total),
-        animationDuration
-      }]
+      series: [
+        // {
+        //   name: this.$t('dashboard.minutes'),
+        //   type: 'bar',
+        //   stack: 'minutes',
+        //   // barWidth: '60%',
+        //   data: this.instructorsStats.map((stat) => stat.duration),
+        //   animationDuration
+        // },
+        {
+          name: this.$t('dashboard.persons_1'),
+          type: 'bar',
+          stack: 'per_person',
+          // barWidth: '60%',
+          data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_1),
+          animationDuration
+        }, {
+          name: this.$t('dashboard.persons_2'),
+          type: 'bar',
+          stack: 'per_person',
+          // barWidth: '60%',
+          data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_2),
+          animationDuration
+        }, {
+          name: this.$t('dashboard.persons_3'),
+          type: 'bar',
+          stack: 'per_person',
+          // barWidth: '60%',
+          data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_3),
+          animationDuration
+        }, {
+          name: this.$t('dashboard.persons_4'),
+          type: 'bar',
+          stack: 'per_person',
+          // barWidth: '60%',
+          data: this.instructorsStats.map((stat) => stat.duration_by_persons.persons_4),
+          animationDuration
+        }, {
+          name: this.$t('dashboard.total'),
+          type: 'bar',
+          stack: 'price',
+          // barWidth: '60%',
+          data: this.instructorsStats.map((stat) => stat.total),
+          animationDuration
+        }]
     } as EChartOption<EChartOption.SeriesBar>)
-  }
-
-  private fetchData() {
-    DashboardModule.GetInstructorsStats().then(() => {
-      this.initChart()
-    })
   }
 }
 </script>

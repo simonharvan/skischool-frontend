@@ -213,10 +213,10 @@ export default {
     title: "Client"
   },
   dashboard: {
-    newClients: 'New clients last month',
-    duration: 'Lessons last month',
+    newClients: 'New clients',
+    duration: 'Lessons',
     unpaid: 'Not paid yet',
-    paidThisMonth: 'Paid this month',
+    paidThisMonth: 'Paid',
     bestInstructor: 'Best instructor',
     bestInstructorDuration: 'Hours',
     minutes: 'Minutes',

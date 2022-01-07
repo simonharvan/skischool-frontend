@@ -227,10 +227,10 @@ export default {
     title: "Client"
   },
   dashboard: {
-    newClients: 'Nových klient/mesiac',
-    duration: 'Oduč. hodín/mesiac',
+    newClients: 'Nových klient',
+    duration: 'Oduč. hodín',
     unpaid: 'Ešte nezaplatené',
-    paidThisMonth: 'Zaplatené za posl. mesiac',
+    paidThisMonth: 'Zaplatené',
     bestInstructor: 'Najlepší inštruktor',
     bestInstructorDuration: 'Odučené',
     minutes: 'Odučených (min.)',
