@@ -25,6 +25,7 @@ export interface ILesson {
   persons_count: number
   status: string
   note: string
+  instructor_paid?: boolean
   instructor?: IInstructor
   client?: IClient
 }
@@ -57,4 +58,22 @@ export interface IDurationByPersons {
   persons_2: number
   persons_3: number
   persons_4: number
+}
+
+export interface IPayout {
+  instructor: IInstructor
+  lessons: ILesson[]
+  stats: IPayoutStats
+  payouts: IAlreadyPaidOut
+}
+
+export interface IAlreadyPaidOut {
+  amount: number
+  paid_at: string
+}
+
+export interface IPayoutStats {
+  earned_approx: number
+  total: number
+  total_by_person: IDurationByPersons
 }

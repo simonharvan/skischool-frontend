@@ -358,7 +358,7 @@ export default class extends Vue {
   private handleSearchClients(query: string) {
     this.loadingClients = true
     ClientsModule.GetClients({
-      name: query,
+      query: query,
       limit: 25,
       offset: null
     }).then((result: { total: number, clients: IClient[] }) => {

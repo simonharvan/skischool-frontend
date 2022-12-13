@@ -4,6 +4,7 @@ export default {
     lessons: 'Hodiny',
     attendance: 'Dochádzka',
     instructors: 'Inštruktori',
+    payouts: 'Vyplaty',
     clients: 'Klienti',
     documentation: 'Documentation',
     guide: 'Guide',
@@ -241,11 +242,16 @@ export default {
     total: 'Hodnota odučených (€)'
   },
   clients: {
-    search: "Hľadať podľa mena"
+    search: "Hľadať podľa mena, telefónu alebo emailu"
   },
   save: 'Uložiť',
   delete: 'Vymazať',
   cancel: 'Zrušiť',
   confirm: 'Potvrdiť',
-  generate: 'Generovať'
+  generate: 'Generovať',
+  payouts: {
+    previous: 'Predchadzajúci',
+    this: 'Tento mesiac',
+    next: 'Ďalší',
+  }
 }

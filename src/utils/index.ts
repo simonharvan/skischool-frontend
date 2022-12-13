@@ -74,6 +74,10 @@ export const formatNiceDateTime = (date: Date) => {
     return date.toLocaleDateString() + ' ' + date.getHours() + ':' +  minutes
 }
 
+export const formatNiceDate = (date: Date) => {
+  return date.toLocaleDateString()
+}
+
 export const formatTimeInMinToNiceTime = (time: number) => {
   const hours = Math.floor(time / 60)
 

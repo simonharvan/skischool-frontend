@@ -124,7 +124,7 @@ export const constantRoutes: RouteConfig[] = [
     children: [
       {
         path: '/instructors',
-        component: () => import(/* webpackChunkName: "attendance" */ '@/views/instructors/index.vue'),
+        component: () => import(/* webpackChunkName: "instructors" */ '@/views/instructors/index.vue'),
         name: 'Instructors',
         meta: {
           title: 'instructors',
@@ -133,6 +133,29 @@ export const constantRoutes: RouteConfig[] = [
         }
       }
     ]
+  },
+  {
+    path: '/payouts',
+    component: Layout,
+    redirect: '/payouts',
+    children: [
+      {
+        path: '/payouts',
+        component: () => import(/* webpackChunkName: "payouts" */ '@/views/payouts/index.vue'),
+        name: 'Payout',
+        meta: {
+          title: 'payouts',
+          icon: 'like',
+          affix: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/payout-download',
+    name: 'payout-download',
+    component: () => import(/* webpackChunkName: "payouts" */ '@/views/payouts/download.vue'),
+    meta: { hidden: true }
   },
   {
     path: '/clients',
@@ -184,7 +207,7 @@ export const asyncRoutes: RouteConfig[] = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history',  // Disabled due to Github Pages doesn't support this, enable this if you need.
+  mode: 'history',  // Disabled due to Github Pages doesn't support this, enable this if you need.
   scrollBehavior: (to, from, savedPosition) => {
     if (savedPosition) {
       return savedPosition

@@ -168,7 +168,7 @@ export default class extends Vue {
     return row.phone.substr(0, 4) + " " +
       row.phone.substr(4, 3) + " " +
       row.phone.substr(7, 3) + " " +
-      row.phone.substr(10, 3)
+      row.phone.substr(10, 10)
   }
 
   handleNewInstructor() {

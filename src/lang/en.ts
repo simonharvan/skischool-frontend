@@ -4,6 +4,8 @@ export default {
     lessons: 'Lessons',
     attendance: 'Attendance',
     instructors: 'Instructors',
+    payouts: 'Payouts',
+    clients: 'Clients',
     documentation: 'Documentation',
     guide: 'Guide',
     permission: 'Permission',
@@ -226,9 +228,17 @@ export default {
     persons_4: '4+ Person',
     total: 'Total earned'
   },
+  clients: {
+    search: "Search by name, phone or email"
+  },
   save: 'Save',
   delete: 'Delete',
   cancel: 'Cancel',
   confirm: 'Confirm',
-  generate: 'Generate'
+  generate: 'Generate',
+  payouts: {
+    previous: 'Previous',
+    this: 'This month',
+    next: 'Next',
+  }
 }

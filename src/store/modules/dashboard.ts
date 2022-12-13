@@ -30,6 +30,8 @@ class Dashboard extends VuexModule implements IDashboardState {
 
   @Mutation
   private SET_STATS_DATE(dates: Date[]) {
+    dates[0].setHours(2)
+    dates[0].setMinutes(0)
     dates[1].setHours(23)
     dates[1].setMinutes(59)
     this.dates = dates

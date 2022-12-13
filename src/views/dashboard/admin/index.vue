@@ -87,6 +87,19 @@ export default class extends Vue {
         end.setHours(23)
         picker.$emit('pick', [start, end]);
       }
+    }, {
+      text: 'Dva mesiace',
+      onClick(picker: any) {
+        const start = new Date();
+        start.setMonth(start.getMonth() - 1);
+        start.setDate(1)
+        start.setHours(0)
+        const end = new Date(start);
+        end.setMonth(end.getMonth() + 2)
+        end.setDate(end.getDate() - 1)
+        end.setHours(23)
+        picker.$emit('pick', [start, end]);
+      }
     }]
   }
 

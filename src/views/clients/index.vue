@@ -145,7 +145,7 @@ export default class extends Vue {
   private fetchClients(name: string | null = null) {
     this.loading = true
     ClientsModule.GetClients({
-      name: name,
+      query: name,
       limit: this.pageSize,
       offset: this.pageSize * (this.page - 1)
     }).then((result: { total: number, clients: IClient[] }) => {
