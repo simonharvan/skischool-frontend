@@ -8,7 +8,7 @@
       class="drawer-bg"
       @click="handleClickOutside"
     />
-    <sidebar class="sidebar-container" />
+    <sidebar-comp class="sidebar-container" />
     <div
       :class="{hasTagsView: showTagsView}"
       class="main-container"
@@ -28,7 +28,8 @@ import { Component } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import { DeviceType, AppModule } from '@/store/modules/app'
 import { SettingsModule } from '@/store/modules/settings'
-import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
+import { AppMain, Navbar, Settings, TagsView } from './components'
+import SidebarComp from './components/Sidebar/index.vue'
 import RightPanel from '@/components/RightPanel/index.vue'
 import ResizeMixin from './mixin/resize'
 import { InstructorsModule } from '@/store/modules/instructor'
@@ -37,10 +38,10 @@ import { InstructorsModule } from '@/store/modules/instructor'
   name: 'Layout',
   components: {
     AppMain,
+    SidebarComp,
     Navbar,
     RightPanel,
     Settings,
-    Sidebar,
     TagsView
   }
 })

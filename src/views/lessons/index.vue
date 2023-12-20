@@ -64,6 +64,7 @@
 
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
+//@ts-ignore
 import GanttScheduler from 'vue-gantt-schedule-timeline-calendar'
 import {LessonsModule} from '@/store/modules/lessons'
 import {IInstructor, ILesson} from '@/api/types'

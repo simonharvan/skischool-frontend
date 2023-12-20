@@ -8,8 +8,8 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
+        :background-color="menuBg"
+        :text-color="textColor"
         :active-text-color="menuActiveTextColor"
         :unique-opened="false"
         :collapse-transition="false"
@@ -34,10 +34,9 @@ import { PermissionModule } from '@/store/modules/permission'
 import { SettingsModule } from '@/store/modules/settings'
 import SidebarItem from './SidebarItem.vue'
 import SidebarLogo from './SidebarLogo.vue'
-import variables from '@/styles/_variables.scss'
 
 @Component({
-  name: 'SideBar',
+  name: 'SidebarComp',
   components: {
     SidebarItem,
     SidebarLogo
@@ -60,12 +59,16 @@ export default class extends Vue {
     if (SettingsModule.sidebarTextTheme) {
       return SettingsModule.theme
     } else {
-      return variables.menuActiveText
+      return "#409EFF"
     }
   }
 
-  get variables() {
-    return variables
+  get menuBg() {
+    return "#304156"
+  }
+
+  get textColor() {
+    return "#bfcbd9"
   }
 
   get activeMenu() {

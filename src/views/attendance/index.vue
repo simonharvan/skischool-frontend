@@ -29,6 +29,7 @@
         placeholder="Pick a day"
         format="d.M.yyyy"
       />
+      {{ selectedDateDay }}
     </el-row>
     <el-table
       ref="attendanceTable"
@@ -64,14 +65,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import { InstructorsModule } from '@/store/modules/instructor'
-import { AttendanceModule } from '@/store/modules/attendance'
-import { IAttendance, IInstructor } from '@/api/types'
-import { formatDateTimeToBackendWithOffset, formatDateToBackend } from '@/utils'
-import { Message } from 'element-ui'
+import {Component, Vue, Watch} from 'vue-property-decorator'
+import {InstructorsModule} from '@/store/modules/instructor'
+import {AttendanceModule} from '@/store/modules/attendance'
+import {IAttendance, IInstructor} from '@/api/types'
+import {formatDateTimeToBackendWithOffset, formatDateToBackend} from '@/utils'
+import {Message} from 'element-ui'
 
-    @Component({
+@Component({
       name: 'Attendance',
       components: {}
     })
@@ -88,6 +89,11 @@ export default class extends Vue {
 
         get selectedDate() {
           return AttendanceModule.selectedDate
+        }
+
+        get selectedDateDay() {
+          // @ts-ignore
+          return this.$t('lessons.weekdays')[AttendanceModule.selectedDate.getDay()]
         }
 
         set selectedDate(date: Date) {

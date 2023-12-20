@@ -31,6 +31,10 @@
         :formatter="durationFormatter"
       />
       <el-table-column
+        property="persons_count"
+        label="Person count"
+      />
+      <el-table-column
         v-if="lessons"
         property="name"
         width="140"
