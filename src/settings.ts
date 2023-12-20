@@ -23,34 +23,37 @@ const settings: ISettings = {
   sidebarTextTheme: true,
   devServerPort: 9527,
   mockServerPort: 9528,
-  pricePerHour: 25,
+  pricePerHour: 30,
   priceList: {
     person_1: {
-      hours_1: 25,
-      hours_1_5: 36,
-      hours_2: 48,
-      hours_3: 70,
-      hours_4: 90,
-      hours_5: 105,
-      hours_6: 120
+      hours_1: 30,
+      hours_1_5: 43,
+      hours_2: 56,
+      hours_3: 81,
+      hours_4: 108,
+      hours_5: 135,
+      hours_6: 156,
+      hours_7: 182,
     },
     person_2: {
       hours_1: 45,
-      hours_1_5: 55,
-      hours_2: 60,
-      hours_3: 80,
-      hours_4: 100,
-      hours_5: 118,
-      hours_6: 132
+      hours_1_5: 58,
+      hours_2: 71,
+      hours_3: 96,
+      hours_4: 123,
+      hours_5: 150,
+      hours_6: 171,
+      hours_7: 197,
     },
     person_3: {
-      hours_1: 64,
-      hours_1_5: 69,
-      hours_2: 74,
-      hours_3: 94,
-      hours_4: 114,
-      hours_5: 130,
-      hours_6: 145
+      hours_1: 55,
+      hours_1_5: 68,
+      hours_2: 81,
+      hours_3: 106,
+      hours_4: 133,
+      hours_5: 160,
+      hours_6: 181,
+      hours_7: 207,
     }
   }
 }
