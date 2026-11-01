@@ -1,26 +1,30 @@
-name: Deploy on GitHub Pages
+name: Deploy to office.skimedved.sk
 
 on:
   push:
-    branches:
-    - master
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v1
-    - name: Yarn install
-      uses: borales/actions-yarn@v2.0.0
-      with:
-        cmd: install
-    - name: Yarn build
-      uses: borales/actions-yarn@v2.0.0
-      with:
-        cmd: build:prod
-    - name: Deploy
-      uses: maxheld83/ghpages@v0.2.1
-      env:
-        BUILD_DIR: dist/
-        GH_PAT: ${{ secrets.GH_PAT }}
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Upload dist/ over FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_DIR }}
+          local-dir: dist/
+          # use "ftp" only if the hosting doesn't support FTPS
+          protocol: ftps

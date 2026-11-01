@@ -1,91 +1,51 @@
+# Ski school backoffice
 
-## Overview
+Admin app of the ski school: lessons timeline, attendance, instructors, payouts, clients and stats.
 
-Skischool is a front-end solution for skischools lessons booking. It is based on admin interfaces based on [vue-typescript-admin-template](http://armour.github.io/vue-typescript-admin-template), many thanks to him for the awesome open source project! :)
+Vue 3 + Vite + TypeScript, Pinia, Vue Router, vue-i18n (SK/EN), Element Plus + Tailwind, ECharts.
 
-## Related Projects
-[vue-typescript-admin-template](http://armour.github.io/vue-typescript-admin-template) \
-[vue](https://github.com/vuejs/vue) \
-[typescript](https://www.typescriptlang.org/)   
-[element-ui](https://github.com/ElemeFE/element) \
-[gantt scheduler](https://github.com/neuronetio/gantt-schedule-timeline-calendar) - [web](https://neuronetio.github.io/gantt-schedule-timeline-calendar/) (main screen calendar) \
-[vue gantt scheduler](https://github.com/neuronetio/vue-gantt-schedule-timeline-calendar) (vue wrapper)
-
-
-## Preparation
-
-You need to install [node](http://nodejs.org/) and [git](https://git-scm.com/) locally. The project is based on [typescript](https://www.typescriptlang.org/), [vue](https://vuejs.org/index.html), [vuex](https://vuex.vuejs.org/), [vue-router](https://router.vuejs.org/), [vue-cli](https://github.com/vuejs/vue-cli) , [axios](https://github.com/axios/axios) and [element-ui](https://github.com/ElemeFE/element), all request data is from backend of this project, which is in my private repo (contact me if you are interested).
-
-## Project setup
-
-With [yarn](https://yarnpkg.com/lang/en/) or [npm](https://www.npmjs.com/get-npm)
-
-#### Install dependencies
+## Develop
 
 ```bash
-yarn install
+npm install
+npm run dev        # http://localhost:5173
+npm run lint
+npm test
+npm run build      # type-check + production build into dist/
 ```
 
-#### Compiles and hot-reloads for development
+The API base URL comes from `VITE_API_BASE_URL`:
+
+| file | value |
+| --- | --- |
+| `.env.development` | `http://backend.test/api/admin` |
+| `.env.production` | `https://api.skischool.bero.tech/api/admin` |
+
+To point the dev server somewhere else without touching the repo, create `.env.development.local` (git-ignored).
+
+## Structure
+
+- `src/api` – one typed module per backend resource, `http.ts` is the axios client (token, 401 handling, error toasts)
+- `src/components/timeline` – the generic day timeline (`DayTimeline.vue`) and its pure, unit-tested helpers (`geometry.ts`)
+- `src/config/pricing.ts` – price list and instructor payout rate
+- `src/i18n` – `sk.ts` is the source of truth, `en.ts` is typed against it
+- `src/utils/date.ts` – the backend expects local wall-clock `YYYY-MM-DD HH:mm:ss`; always go through these helpers
+
+## Deploy (https://office.skimedved.sk)
+
+### Automatically
+
+Every push to `master` runs `.github/workflows/deploy.yml`, which lints, tests, builds and uploads `dist/` over FTP(S).
+Add these repository secrets (Settings → Secrets and variables → Actions):
+
+- `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` – FTP access of the hosting
+- `FTP_DIR` – remote folder of the `office.skimedved.sk` subdomain, ending with `/`
+
+### By hand
 
 ```bash
-yarn run serve
+npm run build
 ```
 
-#### Compiles and minifies for production
-
-```bash
-yarn run build:prod
-```
-
-#### Lints and fixes files
-
-```bash
-yarn run lint
-```
-
-#### Run your unit tests
-
-```bash
-yarn run test:unit
-```
-
-#### Run your end-to-end tests
-
-```bash
-yarn run test:e2e
-```
-
-#### Generate all svg components
-
-```bash
-yarn run svg
-```
-
-#### Customize Vue configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-## Browsers support
-
-Modern browsers and Internet Explorer 10+. (Taken from [vue-typescript-admin-template](http://armour.github.io/vue-typescript-admin-template), didn't test it myself)
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| --------- | --------- | --------- | --------- |
-| IE10, IE11, Edge| last 2 versions| last 2 versions| last 2 versions
-
-## Known issues
-
-- [ ] Need to change Date class to moment or similar (doesn't work in safari)
-- [ ] Fix typescript issues in lessons component (doesn't effect functionality)
-
-## Screenshots  
-![Gif](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/animation.gif)
-![Gif 2](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/animation2.gif)
-![Gif 3](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/animation3.gif)
-![Screenshot 1](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot1.png)
-![Screenshot 2](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot2.png)
-![Screenshot 3](https://raw.githubusercontent.com/simonharvan/skischool-frontend/master/docs/screenshot3.png)
-
-## Model 
-![model](https://github.com/simonharvan/skischool-frontend/raw/master/docs/screenshot4.png)
+Upload **the contents** of `dist/` to the web root of the subdomain with any FTP client. Make sure the hidden
+`.htaccess` is uploaded too – without it, reloading a page other than `/` returns 404.
