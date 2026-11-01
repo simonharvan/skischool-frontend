@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', Arial, sans-serif;
+  background: #f0f2f5;
+  color: #303133;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  --sidebar-bg: #304156;
+  --sidebar-width: 210px;
+  --sidebar-width-collapsed: 64px;
+  --color-active: #1890ff;
+}

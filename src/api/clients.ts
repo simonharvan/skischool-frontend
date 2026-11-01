@@ -1,16 +1,8 @@
-import request from '@/utils/request'
+import type { Client } from '@/types'
+import http from './http'
 
-export const getClients = (params: any) =>
-  request({
-    url: '/clients',
-    method: 'get',
-    params
-  })
+export const getClients = (params: { query?: string; limit?: number; offset?: number }) =>
+  http.get<{ clients: Client[]; clientsCount: number }>('/clients', { params })
 
-export const updateClient = (id: number, data: any) =>
-  request({
-    url: `/clients/${id}`,
-    method: 'put',
-    data
-  })
-
+export const updateClient = (id: number, client: Partial<Client>) =>
+  http.put<{ client: Client }>(`/clients/${id}`, { client }).then((r) => r.client)

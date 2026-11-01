@@ -1,4 +1,0 @@
-dist/*.js
-src/assets
-tests/unit/coverage
-src/views/lessons/index.vue

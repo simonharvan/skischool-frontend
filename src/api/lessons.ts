@@ -1,42 +1,19 @@
-import request from '@/utils/request'
+import type { Lesson, LessonPayload } from '@/types'
+import http from './http'
 
-export const getLessons = (params: any) =>
-  request({
-    url: '/lessons',
-    method: 'get',
-    params
-  })
+export const getLessons = (params: Record<string, unknown>) =>
+  http.get<{ lessons: Lesson[] }>('/lessons', { params }).then((r) => r.lessons)
 
-export const createLesson = (data: any) =>
-    request({
-        url: '/lessons',
-        method: 'post',
-        data
-    })
+export const createLesson = (lesson: LessonPayload) =>
+  http.post<{ lesson: Lesson }>('/lessons', { lesson }).then((r) => r.lesson)
 
-export const updateLesson = (id: number, data: any) =>
-    request({
-        url: `/lessons/${id}`,
-        method: 'put',
-        data
-    })
+export const updateLesson = (id: number, lesson: LessonPayload) =>
+  http.put<{ lesson: Lesson }>(`/lessons/${id}`, { lesson }).then((r) => r.lesson)
 
-export const deleteLesson = (id: number) =>
-    request({
-        url: `/lessons/${id}`,
-        method: 'delete',
-    })
+export const deleteLesson = (id: number) => http.delete(`/lessons/${id}`)
 
 export const preparePayLesson = (id: number) =>
-    request({
-        url: `/lessons/${id}/prepare-pay`,
-        method: 'get',
-    })
+  http.get<{ lessons: Lesson[] }>(`/lessons/${id}/prepare-pay`).then((r) => r.lessons)
 
-export const payLesson = (data: any) =>
-    request({
-        url: `/lessons/pay`,
-        method: 'post',
-        data
-    })
-
+export const payLessons = (ids: number[], price: number) =>
+  http.post('/lessons/pay', { lesson: { ids, price } })

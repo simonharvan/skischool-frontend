@@ -1,22 +1,19 @@
-<template>
-  <div id="app">
-    <router-view />
-    <service-worker-update-popup />
-  </div>
-</template>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { ElConfigProvider } from 'element-plus'
+import elSk from 'element-plus/es/locale/lang/sk'
+import elEn from 'element-plus/es/locale/lang/en'
+import { useLocaleStore } from '@/stores/locale'
+import { watchLocale } from '@/i18n'
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import ServiceWorkerUpdatePopup from '@/pwa/components/ServiceWorkerUpdatePopup.vue'
-import { InstructorsModule } from '@/store/modules/instructor'
+const localeStore = useLocaleStore()
+watchLocale(() => localeStore.locale)
 
-@Component({
-  name: 'App',
-  components: {
-    ServiceWorkerUpdatePopup
-  }
-})
-export default class extends Vue {
-
-}
+const elLocale = computed(() => (localeStore.locale === 'sk' ? elSk : elEn))
 </script>
+
+<template>
+  <el-config-provider :locale="elLocale">
+    <router-view />
+  </el-config-provider>
+</template>

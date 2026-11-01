@@ -1,17 +1,8 @@
-import request from '@/utils/request'
+import type { InstructorStats, Stats } from '@/types'
+import http from './http'
 
-export const getStats = (params: any) =>
-  request({
-    url: '/stats',
-    method: 'get',
-    params
-  })
+export const getStats = (params: { from: string; to: string }) =>
+  http.get<{ stats: Stats }>('/stats', { params }).then((r) => r.stats)
 
-export const getInstructorsStats = (params: any) =>
-  request({
-    url: '/instructors-stats',
-    method: 'get',
-    params
-  })
-
-
+export const getInstructorsStats = (params: { from: string; to: string }) =>
+  http.get<{ stats: InstructorStats[] }>('/instructors-stats', { params }).then((r) => r.stats)
