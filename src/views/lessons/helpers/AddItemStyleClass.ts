@@ -37,5 +37,11 @@ export class AddItemStyleClass {
         } else {
             this.element.classList.remove('paid');
         }
+
+      if ((this.data as any).item.data.is_time_off) {
+        this.element.classList.add('time_off')
+      } else {
+        this.element.classList.remove('time_off');
+      }
     }
 }

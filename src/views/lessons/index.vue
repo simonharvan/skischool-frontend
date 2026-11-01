@@ -110,7 +110,6 @@ export default class extends Vue {
 
   private handleOnState(state: any) {
     this.state = state
-    console.log('handleOnState()', state)
     this.subs.push(
       state.subscribe('config.chart.items.:id', _.debounce(this.handleGanttEvent, 300))
     )
@@ -459,7 +458,7 @@ export default class extends Vue {
 </script>
 <style lang="scss" scoped>
 .lessons-container {
-  padding: 32px;
+  padding: 32px 32px 0 32px;
 
   .controls {
     margin-bottom: 20px;
@@ -481,6 +480,21 @@ export default class extends Vue {
       box-shadow: 0 0 5px rgba(50, 50, 50, 1);
       border: 1px solid rgba(50, 50, 50, 1);
       background: #94C23E !important;
+    }
+
+    &.time_off {
+      -webkit-box-shadow: 0 0 5px 0 rgba(50, 50, 50, 1);
+      -moz-box-shadow: 0 0 5px rgba(50, 50, 50, 1);
+      box-shadow: 0 0 5px rgba(50, 50, 50, 1);
+      border: 1px solid rgba(50, 50, 50, 1);
+      background: repeating-linear-gradient(
+          -55deg,
+          #7a7a7a,
+          #7a7a7a 10px,
+          #6e6e6e 10px,
+          #6e6e6e 20px
+      ) !important;
+      color: #ffffff;
     }
 
     &.colored.green {

@@ -28,6 +28,7 @@ export interface ILesson {
   instructor_paid?: boolean
   instructor?: IInstructor
   client?: IClient
+  is_time_off?: boolean
 }
 
 export interface IAttendance {
