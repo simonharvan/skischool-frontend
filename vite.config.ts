@@ -16,7 +16,12 @@ export default defineConfig({
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   build: {
-    chunkSizeWarningLimit: 900,
+    // The host rate-limits static requests (429), so ship one JS and one CSS file instead of ~60 chunks.
+    chunkSizeWarningLimit: 2500,
+    cssCodeSplit: false,
+    rollupOptions: {
+      output: { inlineDynamicImports: true },
+    },
   },
   test: {
     environment: 'jsdom',
