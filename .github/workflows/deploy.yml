@@ -29,3 +29,5 @@ jobs:
           local-dir: dist/
           # use "ftp" only if the hosting doesn't support FTPS
           protocol: ftps
+          log-level: verbose
+          timeout: 120000
