@@ -4,7 +4,7 @@ import pluginVue from 'eslint-plugin-vue'
 import prettier from 'eslint-config-prettier'
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'src/auto-imports.d.ts', 'src/components.d.ts'] },
+  { ignores: ['dist', 'dist-local', 'node_modules', 'src/auto-imports.d.ts', 'src/components.d.ts'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...pluginVue.configs['flat/recommended'],
