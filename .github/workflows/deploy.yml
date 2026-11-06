@@ -8,6 +8,7 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    environment: Prod
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
