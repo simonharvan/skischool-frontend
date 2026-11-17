@@ -7,6 +7,7 @@ import { BarChart } from 'echarts/charts'
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
+import AccDashboardCard from '@/components/accommodation/AccDashboardCard.vue'
 import { getInstructorsStats, getStats } from '@/api/stats'
 import type { InstructorStats, Stats } from '@/types'
 import { minutesToHHMM, toBackendDate } from '@/utils/date'
@@ -112,6 +113,7 @@ const option = computed(() => {
 
 <template>
   <div>
+    <AccDashboardCard />
     <el-date-picker
       v-model="dates"
       type="daterange"

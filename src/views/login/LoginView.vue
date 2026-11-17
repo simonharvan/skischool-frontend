@@ -7,11 +7,14 @@ import logo from '@/assets/logo.png'
 import LangSwitch from '@/components/LangSwitch.vue'
 import { login } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth'
+import { login as accLogin } from '@/api/accommodation/auth'
+import { useAccommodationAuthStore } from '@/stores/accommodationAuth'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+const accAuth = useAccommodationAuthStore()
 
 const formRef = ref<FormInstance>()
 const loading = ref(false)
@@ -40,8 +43,18 @@ async function submit() {
   if (!valid) return
   loading.value = true
   try {
-    const { access_token } = await login(form.email, form.password)
-    auth.setToken(access_token)
+    // The accommodation API has its own users; with the same credentials there,
+    // one form logs into both. If that login fails, its own login page is the fallback.
+    const [main, acc] = await Promise.allSettled([
+      login(form.email, form.password),
+      accLogin(form.email, form.password),
+    ])
+    if (acc.status === 'fulfilled') {
+      accAuth.setToken(acc.value.token)
+      accAuth.user = acc.value.user
+    }
+    if (main.status === 'rejected') throw main.reason
+    auth.setToken(main.value.access_token)
     router.replace((route.query.redirect as string) || '/')
   } catch (e: any) {
     // 422 is a wrong password – the http client only reports other failures itself
