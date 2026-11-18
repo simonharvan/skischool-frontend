@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 import { type FormInstance, type FormRules } from 'element-plus'
 import { getClients } from '@/api/clients'
+import { searchAccGuests, withoutDuplicates } from '@/utils/crossSearch'
+import type { AccGuest } from '@/types/accommodation'
 import { createLesson, deleteLesson, updateLesson } from '@/api/lessons'
 import { durationToPrice } from '@/config/pricing'
 import { useInstructorsStore } from '@/stores/instructors'
@@ -40,6 +42,8 @@ const blank = () => ({
 const form = reactive(blank())
 
 const clientOptions = ref<Client[]>([])
+/** accommodation guests matching the search; they show under negative keys (-id) */
+const accOptions = ref<AccGuest[]>([])
 const loadingClients = ref(false)
 const isNew = computed(() => form.id < 0)
 const isPaid = computed(() => form.status === 'paid')
@@ -105,6 +109,7 @@ function setFrom(lesson: Partial<Lesson> & { instructor?: { id: number } | null 
   form.is_time_off = !!lesson.is_time_off
   form.wasTimeOff = !!lesson.is_time_off
   clientOptions.value = []
+  accOptions.value = []
   if (lesson.client && !lesson.is_time_off) {
     clientOptions.value = [lesson.client as Client]
     form.clientKey = lesson.client.id
@@ -129,14 +134,26 @@ async function searchClients(query: string) {
   const seq = ++clientSearchSeq
   loadingClients.value = true
   try {
-    const result = await getClients({ query, limit: 25 })
-    if (seq === clientSearchSeq) clientOptions.value = result.clients
+    const [result, acc] = await Promise.all([getClients({ query, limit: 25 }), searchAccGuests(query)])
+    if (seq === clientSearchSeq) {
+      clientOptions.value = result.clients
+      accOptions.value = withoutDuplicates(acc, result.clients)
+    }
   } finally {
     if (seq === clientSearchSeq) loadingClients.value = false
   }
 }
 
 function onClientChange(value: number | string | null) {
+  // an accommodation guest becomes a new ski school client with their contact prefilled
+  if (typeof value === 'number' && value < 0) {
+    const g = accOptions.value.find((x) => x.id === -value)
+    if (!g) return
+    form.clientKey = g.name
+    Object.assign(form.client, { name: g.name, email: g.email ?? '', phone: g.phone ?? '', phone_2: '' })
+    if (!form.name) form.name = g.name
+    return
+  }
   if (typeof value === 'number') {
     const c = clientOptions.value.find((x) => x.id === value)
     if (c) {
@@ -307,6 +324,11 @@ defineExpose({ open })
               <el-option v-for="c in clientOptions" :key="c.id" :value="c.id" :label="c.name">
                 <span>{{ c.name }}</span>
                 <span v-if="c.phone" class="float-right text-xs text-gray-400">{{ c.phone }}</span>
+              </el-option>
+              <el-option v-for="g in accOptions" :key="'acc' + g.id" :value="-g.id" :label="g.name">
+                <span>{{ g.name }}</span>
+                <el-tag size="small" type="info" class="ml-2">{{ t('sourceAccommodation') }}</el-tag>
+                <span v-if="g.phone" class="float-right text-xs text-gray-400">{{ g.phone }}</span>
               </el-option>
             </el-select>
           </el-form-item>

@@ -1,5 +1,7 @@
 const sk = {
   save: 'Uložiť',
+  sourceSkischool: 'Lyžiarska škola',
+  sourceAccommodation: 'Ubytovanie',
   saving: 'Ukladám ...',
   delete: 'Vymazať',
   cancel: 'Zrušiť',

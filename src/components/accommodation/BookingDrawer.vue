@@ -17,6 +17,8 @@ import {
   updateBooking,
 } from '@/api/accommodation/bookings'
 import { getGuests } from '@/api/accommodation/guests'
+import { searchSkiClients, withoutDuplicates } from '@/utils/crossSearch'
+import type { Client } from '@/types'
 import { useAccommodationUnitsStore } from '@/stores/accommodationUnits'
 import type {
   AccBooking,
@@ -64,6 +66,8 @@ const form = reactive(blank())
 const draftAdjustments = ref<{ label: string; amount: number }[]>([])
 
 const guestOptions = ref<AccGuest[]>([])
+/** ski school clients matching the search; they show under negative keys (-id) */
+const skiOptions = ref<Client[]>([])
 const loadingGuests = ref(false)
 const selectedGuest = computed(() =>
   typeof form.guestKey === 'number' ? guestOptions.value.find((g) => g.id === form.guestKey) : undefined,
@@ -74,14 +78,30 @@ async function searchGuests(q: string) {
   const mine = ++guestSeq
   loadingGuests.value = true
   try {
-    const res = await getGuests({ q: q || undefined, per_page: 20 })
+    const [res, ski] = await Promise.all([
+      getGuests({ q: q || undefined, per_page: 20 }),
+      isNew.value ? searchSkiClients(q) : Promise.resolve([]),
+    ])
     if (mine !== guestSeq) return
     const keep = selectedGuest.value ? [selectedGuest.value] : []
     guestOptions.value = [...keep, ...res.data.filter((g) => !keep.some((k) => k.id === g.id))]
+    skiOptions.value = withoutDuplicates(ski, guestOptions.value)
   } finally {
     if (mine === guestSeq) loadingGuests.value = false
   }
 }
+
+// picking a ski school client copies them into a new guest (typed-name path, contact prefilled)
+watch(
+  () => form.guestKey,
+  (key) => {
+    if (typeof key !== 'number' || key >= 0) return
+    const c = skiOptions.value.find((x) => x.id === -key)
+    if (!c) return
+    form.newGuest = { email: c.email ?? '', phone: c.phone ?? '' }
+    form.guestKey = c.name
+  },
+)
 
 const checkInAt = computed(() => (form.inDate ? `${form.inDate}T${form.inTime}:00` : ''))
 const checkOutAt = computed(() => (form.outDate ? `${form.outDate}T${form.outTime}:00` : ''))
@@ -187,6 +207,7 @@ function applyBooking(b: AccBooking, cq?: AccCurrentQuote) {
     internal_note: b.internal_note ?? '',
   })
   if (b.guest) guestOptions.value = [b.guest]
+  skiOptions.value = []
 }
 
 async function openNew(prefill: { unit_id?: number; checkIn?: string; checkOut?: string } = {}) {
@@ -209,6 +230,7 @@ async function openNew(prefill: { unit_id?: number; checkIn?: string; checkOut?:
     form.outTime = prefill.checkOut.slice(11, 16)
   }
   guestOptions.value = []
+  skiOptions.value = []
   visible.value = true
   searchGuests('').catch(() => undefined)
   nudgeQuote()
@@ -528,6 +550,11 @@ defineExpose({ openNew, openExisting })
           <el-option v-for="g in guestOptions" :key="g.id" :label="g.name" :value="g.id">
             <span>{{ g.name }}</span>
             <span class="ml-2 text-xs text-gray-400">{{ g.email || g.phone }}</span>
+          </el-option>
+          <el-option v-for="c in skiOptions" :key="'ski' + c.id" :label="c.name" :value="-c.id">
+            <span>{{ c.name }}</span>
+            <el-tag size="small" type="info" class="ml-2">{{ t('sourceSkischool') }}</el-tag>
+            <span class="ml-2 text-xs text-gray-400">{{ c.email || c.phone }}</span>
           </el-option>
         </el-select>
       </el-form-item>

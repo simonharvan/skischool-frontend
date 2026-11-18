@@ -5,6 +5,8 @@ type Messages = typeof sk
 /** Typed against `sk`, so a missing key is a compile error. */
 const en: Messages = {
   save: 'Save',
+  sourceSkischool: 'Ski school',
+  sourceAccommodation: 'Accommodation',
   saving: 'Saving ...',
   delete: 'Delete',
   cancel: 'Cancel',

@@ -29,6 +29,8 @@ const errorText = (error: AxiosError<any>): string => {
 http.interceptors.response.use(
   (response) => response.data,
   (error: AxiosError<any>) => {
+    // cross-system lookups pass `noAuthRedirect: true`: a missing/expired login there must not log the user out here
+    if (error.response?.status === 401 && (error.config as any)?.noAuthRedirect) return Promise.reject(error)
     if (error.response?.status === 401) {
       const auth = useAccommodationAuthStore()
       const wasLoggedIn = auth.isLoggedIn
