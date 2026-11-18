@@ -149,6 +149,13 @@ function onClientChange(value: number | string | null) {
       if (!form.name) form.name = c.name
     }
   } else if (typeof value === 'string') {
+    // typing an existing client's exact name and pressing Enter should pick that client, not create a new one
+    const match = clientOptions.value.find((x) => x.name.trim().toLowerCase() === value.trim().toLowerCase())
+    if (match) {
+      form.clientKey = match.id
+      onClientChange(match.id)
+      return
+    }
     Object.assign(form.client, { name: value, email: '', phone: '', phone_2: '' })
     if (!form.name) form.name = value
   }
@@ -291,7 +298,6 @@ defineExpose({ open })
               filterable
               remote
               allow-create
-              default-first-option
               clearable
               :remote-method="searchClients"
               :loading="loadingClients"
