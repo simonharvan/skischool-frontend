@@ -38,6 +38,11 @@ export const addPayment = (
   id: number,
   payload: { amount: number; method: PaymentMethod; note?: string; adjustment?: { label: string; amount: number } },
 ) => http.post<BookingResponse>(`/bookings/${id}/payments`, payload)
+/** The guest's bookings that still owe money (including this one if it does). */
+export const preparePay = (id: number) => http.get<{ data: AccBooking[] }>(`/bookings/${id}/prepare-pay`).then((r) => r.data)
+/** Pays the full outstanding balance of each booking. */
+export const payBookings = (payload: { booking_ids: number[]; method: PaymentMethod; note?: string }) =>
+  http.post<{ data: AccBooking[] }>('/bookings/pay', payload).then((r) => r.data)
 export const deletePayment = (id: number) => http.delete<BookingResponse>(`/payments/${id}`)
 
 export const addAdjustment = (id: number, payload: { label: string; amount: number }) =>

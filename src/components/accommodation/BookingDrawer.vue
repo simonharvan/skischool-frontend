@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { paymentTagType } from '@/components/accommodation/payment'
 import { useI18n } from 'vue-i18n'
 import { ElMessageBox } from 'element-plus'
@@ -11,6 +11,8 @@ import {
   deleteAdjustment,
   deletePayment,
   getBooking,
+  payBookings,
+  preparePay,
   quote as fetchQuote,
   updateBooking,
 } from '@/api/accommodation/bookings'
@@ -342,9 +344,13 @@ async function usePrice(use: boolean) {
 
 // ---- adjustments & payments -------------------------------------------------------------
 const adjDialog = ref(false)
-const adj = reactive({ label: '', amount: null as number | null })
+// a discount/surcharge is entered as the new total price; the stored adjustment is the difference
+const adj = reactive({ label: '', newPrice: null as number | null, amount: null as number | null })
+const priceDiff = (newPrice: number | null) =>
+  newPrice === null ? null : Math.round((newPrice - total.value) * 100) / 100 || null
+watch(() => adj.newPrice, (v) => (adj.amount = priceDiff(v)))
 function openAdjustment() {
-  Object.assign(adj, { label: '', amount: null })
+  Object.assign(adj, { label: '', newPrice: total.value, amount: null })
   adjDialog.value = true
 }
 async function saveAdjustment() {
@@ -366,12 +372,62 @@ async function removeAdjustment(id: number) {
 }
 
 const payDialog = ref(false)
-const pay = reactive({ amount: null as number | null, method: 'cash' as PaymentMethod, note: '', withAdj: false, adjLabel: '', adjAmount: null as number | null })
-function openPayment() {
-  Object.assign(pay, { amount: balance.value > 0 ? balance.value : null, method: 'cash', note: '', withAdj: false, adjLabel: '', adjAmount: null })
+const pay = reactive({ amount: null as number | null, method: 'cash' as PaymentMethod, note: '', withAdj: false, adjLabel: '', adjNewPrice: null as number | null, adjAmount: null as number | null })
+// with a new price the payment defaults to what is left of that price
+watch(
+  () => [pay.withAdj, pay.adjNewPrice] as const,
+  ([withAdj, newPrice]) => {
+    pay.adjAmount = withAdj ? priceDiff(newPrice) : null
+    const owed = Math.round(((withAdj && newPrice !== null ? newPrice : total.value) - paid.value) * 100) / 100
+    pay.amount = owed > 0 ? owed : null
+  },
+)
+// like lessons: paying offers every booking of the same guest that still owes money
+const openBookings = ref<AccBooking[]>([])
+const selectedBookings = ref<AccBooking[]>([])
+const loadingOpen = ref(false)
+const openTable = ref<{ toggleRowSelection: (row: any, selected?: boolean) => void }>()
+const showOpenTable = computed(() => openBookings.value.some((b) => b.id !== booking.value?.id))
+/** Several bookings (or one other than this) selected: each gets its full balance paid. */
+const multiPay = computed(
+  () => showOpenTable.value && !(selectedBookings.value.length === 1 && selectedBookings.value[0].id === booking.value?.id),
+)
+const selectedBalance = computed(() => Math.round(selectedBookings.value.reduce((s, b) => s + b.balance, 0) * 100) / 100)
+
+async function openPayment() {
+  Object.assign(pay, { amount: balance.value > 0 ? balance.value : null, method: 'cash', note: '', withAdj: false, adjLabel: '', adjNewPrice: total.value, adjAmount: null })
+  openBookings.value = []
+  selectedBookings.value = []
   payDialog.value = true
+  loadingOpen.value = true
+  try {
+    openBookings.value = await preparePay(booking.value!.id)
+    await nextTick()
+    openBookings.value.forEach((b) => openTable.value?.toggleRowSelection(b, true))
+  } catch {
+    openBookings.value = []
+  } finally {
+    loadingOpen.value = false
+  }
+}
+function onOpenSelection(rows: AccBooking[]) {
+  selectedBookings.value = rows
+  if (!multiPay.value) pay.amount = balance.value > 0 ? balance.value : null
 }
 async function savePayment() {
+  if (multiPay.value) {
+    if (!selectedBookings.value.length) return
+    const updated = await payBookings({
+      booking_ids: selectedBookings.value.map((b) => b.id),
+      method: pay.method,
+      note: pay.note || undefined,
+    })
+    const mine = updated.find((b) => b.id === booking.value!.id)
+    if (mine) applyBooking((await getBooking(mine.id)).data, currentQuote.value ?? undefined)
+    payDialog.value = false
+    emit('saved')
+    return
+  }
   if (!pay.amount) return
   const body: any = { amount: pay.amount, method: pay.method, note: pay.note || undefined }
   if (pay.withAdj && pay.adjLabel && pay.adjAmount) body.adjustment = { label: pay.adjLabel, amount: pay.adjAmount }
@@ -576,7 +632,10 @@ defineExpose({ openNew, openExisting })
     <el-dialog v-model="adjDialog" :title="t('acc.addAdjustment')" width="min(400px, 94vw)" append-to-body>
       <el-form label-position="top">
         <el-form-item :label="t('acc.adjustmentLabel')"><el-input v-model="adj.label" placeholder="Zľava stály hosť" /></el-form-item>
-        <el-form-item :label="t('acc.adjustmentAmount')"><el-input-number v-model="adj.amount" :precision="2" :step="5" class="!w-full" /></el-form-item>
+        <el-form-item :label="t('acc.adjustedPrice')">
+          <el-input-number v-model="adj.newPrice" :min="0" :precision="2" :step="5" class="!w-full" data-test="adj-new-price" />
+          <div class="text-xs text-gray-500" data-test="adj-diff">{{ euro(total) }} → {{ adj.amount ? `${adj.amount > 0 ? '+' : '−'}${euro(Math.abs(adj.amount))}` : t('acc.noChange') }}</div>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="adjDialog = false">{{ t('cancel') }}</el-button>
@@ -584,24 +643,49 @@ defineExpose({ openNew, openExisting })
       </template>
     </el-dialog>
 
-    <el-dialog v-model="payDialog" :title="t('acc.addPayment')" width="min(400px, 94vw)" append-to-body>
+    <el-dialog v-model="payDialog" :title="t('acc.addPayment')" :width="showOpenTable ? 'min(720px, 96vw)' : 'min(400px, 94vw)'" append-to-body>
+      <div v-if="showOpenTable" class="mb-4" data-test="open-bookings">
+        <div class="mb-1 text-sm font-medium">{{ t('acc.guestOpenBookings') }}</div>
+        <el-table ref="openTable" v-loading="loadingOpen" :data="openBookings" row-key="id" size="small" @selection-change="onOpenSelection">
+          <el-table-column type="selection" width="40" />
+          <el-table-column prop="code" :label="t('acc.code')" width="110" />
+          <el-table-column :label="t('acc.unit')" min-width="120">
+            <template #default="{ row }">{{ row.unit?.name }}</template>
+          </el-table-column>
+          <el-table-column :label="t('acc.stay')" min-width="150">
+            <template #default="{ row }">{{ fmtDT(row.check_in_at).slice(0, 6) }} – {{ fmtDT(row.check_out_at).slice(0, 6) }}</template>
+          </el-table-column>
+          <el-table-column :label="t('acc.balance')" width="100" align="right">
+            <template #default="{ row }">{{ euro(row.balance) }}</template>
+          </el-table-column>
+        </el-table>
+      </div>
       <el-form label-position="top">
-        <el-form-item :label="t('acc.payAmount')"><el-input-number v-model="pay.amount" :precision="2" :step="10" class="!w-full" data-test="pay-amount" /></el-form-item>
+        <el-form-item v-if="multiPay" :label="t('acc.payAmount')">
+          <div>
+            <div class="text-base font-semibold" data-test="pay-multi-total">{{ euro(selectedBalance) }}</div>
+            <div class="text-xs text-gray-500">{{ t('acc.payFullBalances') }}</div>
+          </div>
+        </el-form-item>
+        <el-form-item v-else :label="t('acc.payAmount')"><el-input-number v-model="pay.amount" :precision="2" :step="10" class="!w-full" data-test="pay-amount" /></el-form-item>
         <el-form-item :label="t('acc.payMethod')">
           <el-select v-model="pay.method" class="w-full">
             <el-option v-for="m in methods" :key="m" :label="t(`acc.methods.${m}`)" :value="m" />
           </el-select>
         </el-form-item>
         <el-form-item :label="t('note')"><el-input v-model="pay.note" /></el-form-item>
-        <el-checkbox v-model="pay.withAdj" :label="t('acc.withAdjustment')" />
-        <template v-if="pay.withAdj">
+        <el-checkbox v-if="!multiPay" v-model="pay.withAdj" :label="t('acc.withAdjustment')" />
+        <template v-if="pay.withAdj && !multiPay">
           <el-form-item :label="t('acc.adjustmentLabel')" class="mt-2"><el-input v-model="pay.adjLabel" /></el-form-item>
-          <el-form-item :label="t('acc.adjustmentAmount')"><el-input-number v-model="pay.adjAmount" :precision="2" :step="5" class="!w-full" /></el-form-item>
+          <el-form-item :label="t('acc.adjustedPrice')">
+            <el-input-number v-model="pay.adjNewPrice" :min="0" :precision="2" :step="5" class="!w-full" />
+            <div class="text-xs text-gray-500">{{ euro(total) }} → {{ pay.adjAmount ? `${pay.adjAmount > 0 ? '+' : '−'}${euro(Math.abs(pay.adjAmount))}` : t('acc.noChange') }}</div>
+          </el-form-item>
         </template>
       </el-form>
       <template #footer>
         <el-button @click="payDialog = false">{{ t('cancel') }}</el-button>
-        <el-button type="primary" :disabled="!pay.amount" data-test="pay-save" @click="savePayment">{{ t('save') }}</el-button>
+        <el-button type="primary" :disabled="multiPay ? !selectedBookings.length : !pay.amount" data-test="pay-save" @click="savePayment">{{ t('save') }}</el-button>
       </template>
     </el-dialog>
   </el-drawer>
